@@ -1,18 +1,13 @@
-//this is only an example, handling everything is yours responsibilty !
-//this is an example - open and close the connection in each request
+const ConnectionPool = require('tedious-connection-pool');
+const Request = require('tedious').Request;
 
-var ConnectionPool = require('tedious-connection-pool');
-var Request = require('tedious').Request;
-var TYPES = require('tedious').TYPES;
-
-var poolConfig = {
-    min: 2,
+const poolConfig = {
+    min: 1,
     max: 5,
     log: true
 };
 
-// TODO: edit this
-var connectionConfig = {
+const connectionConfig = {
     userName: 'Liron_David',
     password: '4RFV_5tgb',
     server: 'assignment3webserver.database.windows.net',
@@ -20,7 +15,7 @@ var connectionConfig = {
 };
 
 //create the pool
-var pool = new ConnectionPool(poolConfig, connectionConfig)
+const pool = new ConnectionPool(poolConfig, connectionConfig)
 
 pool.on('error', function (err) {
     if (err) {
@@ -37,8 +32,8 @@ exports.execQuery = function (query) {
 
         try {
 
-            var ans = [];
-            var properties = [];
+            let ans = [];
+            let properties = [];
 
             //acquire a connection
             pool.acquire(function (err, connection) {
@@ -48,7 +43,7 @@ exports.execQuery = function (query) {
                 }
                 console.log('connection on');
 
-                var dbReq = new Request(query, function (err, rowCount) {
+                let dbReq = new Request(query, function (err, rowCount) {
                     if (err) {
                         console.log('Request ' + err);
                         reject(err);
@@ -62,7 +57,7 @@ exports.execQuery = function (query) {
                     });
                 });
                 dbReq.on('row', function (row) {
-                    var item = {};
+                    let item = {};
                     for (i = 0; i < row.length; i++) {
                         item[properties[i]] = row[i].value;
                     }
