@@ -2,7 +2,7 @@ const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 const DButilsAzure = require('./DButils');
-const jwt = jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 const superSecret = "SUMsumOpen"; // secret variable
 
@@ -11,26 +11,28 @@ const superSecret = "SUMsumOpen"; // secret variable
 //TODO: Complete this post method, create a generic function for inserting a record to the DB.
 //Registration
 router.post('/register', async  function register (req, res) {
-    const {validationError} = validateRegistration(req.body);
-    if (validationError) return res.status(400).send(validationError.details[0].message);
+    const {error} = validateRegistration(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 });
 
 
 //Log in attempting
 router.post('/login', async function login (req, res)  {
-    const {validationError} = validateLogin(req.body);
-    if(validationError) return res.status(400).send(validationError.details[0].message);
-    try {
-        const user = await DButilsAzure.execQuery('select * from Users where userName = ' + '\'' + req.body.username + '\'' + ' and userPassword = ' + '\'' + req.body.password + '\'');
-        if (Object.keys(user).length > 0)
-            sendToken(user, res);
-        else
-            res.status(404).send({message: 'Authentication failed - no such user'});
+    const {error} = validateLogin(req.body);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
     }
-    catch(error){
-        res.status(404).send({message: 'Authentication failed - something went wrong'});
-    }
-
+        try {
+            const user = await DButilsAzure.execQuery('select * from Users where userName = ' + '\'' + req.body.username + '\'' + ' and userPassword = ' + '\'' + req.body.password + '\'');
+            if (Object.keys(user).length > 0)
+                sendToken(user, res);
+            else
+                res.status(404).send({message: 'Authentication failed - no such user'});
+        }
+        catch(err){
+            res.status(404).send({message: 'Authentication failed - something went wrong'});
+        }
 });
 
 
@@ -53,8 +55,8 @@ function sendToken(user, res) {
 
 function validateLogin(body){
     const schema = {
-        username: Joi.required(),
-        password: Joi.required()
+        username: Joi.string().required(),
+        password: Joi.string().required()
     };
     return Joi.validate(body, schema);
 }
