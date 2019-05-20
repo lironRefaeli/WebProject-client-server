@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
-const HomePage = require('./homePage');
+const Guest = require('./Guest');
 const bodyParser = require('body-parser');
 
 //for parsing the json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/',HomePage);
+app.use('/',Guest);
 
 // route middleware to verify a token
 app.use('/loggedIn', (req, res, next) => {
