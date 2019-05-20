@@ -1,13 +1,18 @@
 const express = require('express');
 const app = express();
+const User = require('./User');
 const Guest = require('./Guest');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const superSecret = "SUMsumOpen";
+
 
 //for parsing the json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/',Guest);
+
 
 // route middleware to verify a token
 app.use('/loggedIn', (req, res, next) => {
@@ -43,6 +48,9 @@ app.use('/loggedIn', (req, res, next) => {
         });
     }
 });
+
+app.use('/loggedIn/user',User);
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
