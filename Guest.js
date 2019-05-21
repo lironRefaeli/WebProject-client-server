@@ -150,4 +150,63 @@ function validateRetrieval(body){
     return Joi.validate(body, schema);
 }
 
+
+router.get('/GetPOIs', async function GetPOIs(req, res) {
+    try {
+        const pois = await DButilsAzure.execQuery('SELECT [poiId],[poiName],[categoryName],[poiPicture],[rank],[poiDescription] FROM [dbo].[PointsOfInterests]');
+
+        if (Object.keys(pois).length > 0 ) {
+            res.status(200).send(pois);
+        }
+        else
+            res.status(404).send({message: 'There are no POIS in the DB'});
+    }
+    catch(err){
+        res.status(404).send({message: 'The connection to the DB failed'});
+    }
+
+});
+
+
+router.get('/GetPOIByPOIName/:POI_name', async function GetPOIs(req, res) {
+
+    let poiNameWithoutSpace = req.params["POI_name"].split('_').join(' ');
+    console.log(poiNameWithoutSpace);
+    try {
+        const pois = await DButilsAzure.execQuery('SELECT [poiId],[poiName],[poiPicture] FROM [dbo].[PointsOfInterests]  WHERE [dbo].[PointsOfInterests].poiName=' + '\'' +poiNameWithoutSpace+'\'' );
+
+        if (Object.keys(pois).length > 0 ) {
+            res.status(200).send(pois);
+        }
+        else
+            res.status(404).send({message: 'There is no poi with the chosen name in the DB'});
+    }
+    catch(err){
+        res.status(404).send({message: 'The connection to the DB failed'});
+    }
+
+});
+
+
+router.get('/GetPOIInformation/:POI_id', async function GetPOIs(req, res) {
+    try {
+        const poiInfo = await DButilsAzure.execQuery('SELECT [poiName],[poiPicture],[numOfViews],[rank],[poiDescription] FROM [dbo].[PointsOfInterests] where [poiId] =' +req.params["POI_id"]);
+        const twoLastCritics = await DButilsAzure.execQuery('SELECT TOP (2) [criticId] ,[userId] ,[criticDate] ,[criticText] ,[rank] FROM [dbo].[Critics] WHERE [poiId]  = ' + req.params["POI_id"]  + ' ORDER BY criticDate DESC');
+
+        let poiInfoAndCritics = [];
+        poiInfoAndCritics[0] = poiInfo;
+        poiInfoAndCritics[1] = twoLastCritics;
+
+
+        if (Object.keys(poiInfoAndCritics[0]).length > 0 ) {
+            res.status(200).send(poiInfoAndCritics);
+        }
+        else
+            res.status(404).send({message: 'There is no POI with the chosen id in the DB'});
+    }
+    catch(err){
+        res.status(404).send({message: 'The connection to the DB failed'});
+    }
+
+});
 module.exports = router;
