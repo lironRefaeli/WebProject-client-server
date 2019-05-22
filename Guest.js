@@ -7,8 +7,6 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const superSecret = "SUMsumOpen"; // secret variable
 
 
-
-//TODO: Complete this post method, create a generic function for inserting a record to the DB.
 //Registration
 router.post('/register', async function register (req, res) {
     const {error} = validateRegistration(req.body);
@@ -17,8 +15,13 @@ router.post('/register', async function register (req, res) {
         return;
     }
     try{
+
         let maxID = await DButilsAzure.execQuery('SELECT MAX(userId) FROM Users');
-        let currID = maxID[0][''] + 1;
+        let currID;
+        if(maxID[0][''] === null)
+            currID = 1;
+        else
+            currID = maxID[0][''] + 1;
         insertIntoTable('Users',[currID.toString(), '\'' + req.body.username + '\'', '\'' + req.body.password + '\'',
             '\'' + req.body.firstname + '\'', '\'' + req.body.lastname + '\'', '\'' + req.body.city + '\'',
             '\'' + req.body.country + '\'', '\'' + req.body.email + '\'',
@@ -31,6 +34,24 @@ router.post('/register', async function register (req, res) {
     }
 
 });
+
+function validateRegistration(body){
+    const schema = {
+        username : Joi.string().regex(/^[a-zA-Z]+$/).min(3).max(8).required(),
+        password: Joi.string().alphanum().min(5).max(10).required(),
+        firstname : Joi.string().regex(/^[a-zA-Z]+$/).min(2).max(30).required(),
+        lastname : Joi.string().regex(/^[a-zA-Z]+$/).min(2).max(30).required(),
+        city : Joi.string().min(2).max(30).required(),
+        country : Joi.string().min(2).max(30).required(),
+        email: Joi.string().email({ minDomainAtoms: 2 }),
+        categories: Joi.required(),
+        answers: Joi.required()
+    };
+    return Joi.validate(body, schema);
+}
+
+
+
 
 //Log in attempting
 router.post('/login', async function login (req, res)  {
@@ -51,6 +72,47 @@ router.post('/login', async function login (req, res)  {
     }
 });
 
+function validateLogin(body){
+    const schema = {
+        username: Joi.string().required(),
+        password: Joi.string().required()
+    };
+    return Joi.validate(body, schema);
+}
+
+//Sends the token and the userID to client side.
+async function sendToken(user, res) {
+    let userID;
+    try{
+        userID = await DButilsAzure.execQuery('SELECT userId FROM Users WHERE userName = ' + '\'' + user[0]['userName'] + '\'');
+        if(Object.keys(userID).length === 0)
+        {
+            res.status(404).send({success: false, message: 'failed to log in'});
+            return;
+        }
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'failed to log in - something went wrong'});
+    }
+
+    let payload = {
+        userName: user.userName,
+        admin: user.isAdmin
+    };
+
+    let token = jwt.sign(payload, superSecret, {
+        expiresIn: "1d" // expires in 24 hours
+    });
+    // return the information including token as JSON
+    res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token,
+        userID: userID[0]['userId']
+    });
+}
+
+//Retrieving the password for a user - gets userID and 2 answers for the 2 questions that we hold
 router.post('/passRetrieval', async function retrieval (req, res) {
     const {error} = validateRetrieval(req.body);
     if(error) {
@@ -70,9 +132,21 @@ router.post('/passRetrieval', async function retrieval (req, res) {
     }
 });
 
-router.get('/ThreeRandomPOI', async function randomPOIs (req, res) {
+function validateRetrieval(body){
+    const schema = {
+        username: Joi.string().required(),
+        answers: Joi.required()
+    };
+    return Joi.validate(body, schema);
+}
+
+
+
+//Returns 3 random POIs with a rank of 3 or above
+router.get('/threeRandomPOI', async function randomPOIs (req, res) {
     try{
         const dataArray = await DButilsAzure.execQuery('SELECT TOP 3 poiId, poiName, poiPicture FROM PointsOfInterests' +
+            ' WHERE rank >= 3' +
             ' ORDER BY NEWID()');
         if(Object.keys(dataArray).length > 0)
             res.status(200).send(dataArray);
@@ -85,73 +159,7 @@ router.get('/ThreeRandomPOI', async function randomPOIs (req, res) {
 });
 
 
-
-function sendToken(user, res) {
-    let payload = {
-        userName: user.userName,
-        admin: user.isAdmin
-    };
-
-    let token = jwt.sign(payload, superSecret, {
-        expiresIn: "1d" // expires in 24 hours
-    });
-    // return the information including token as JSON
-    res.json({
-        success: true,
-        message: 'Enjoy your token!',
-        token: token
-    });
-}
-
-function insertIntoTable(tableName, values){
-    let query = 'INSERT INTO ' + tableName + ' VALUES (';
-    for(let i = 0; i < values.length - 1; i++)
-    {
-        query += values[i] + ',';
-    }
-
-    query += values[values.length - 1] + ')';
-
-    DButilsAzure.execQuery(query).then(
-        function() {
-            console.log("success") }).catch(function (error) {
-        console.log(error);
-    });
-}
-
-function validateLogin(body){
-    const schema = {
-        username: Joi.string().required(),
-        password: Joi.string().required()
-    };
-    return Joi.validate(body, schema);
-}
-
-function validateRegistration(body){
-    const schema = {
-        username : Joi.string().regex(/^[a-zA-Z]+$/).min(3).max(8).required(),
-        password: Joi.string().alphanum().min(5).max(10).required(),
-        firstname : Joi.string().regex(/^[a-zA-Z]+$/).min(2).max(30).required(),
-        lastname : Joi.string().regex(/^[a-zA-Z]+$/).min(2).max(30).required(),
-        city : Joi.string().min(2).max(30).required(),
-        country : Joi.string().min(2).max(30).required(),
-        email: Joi.string().email({ minDomainAtoms: 2 }),
-        categories: Joi.required(),
-        answers: Joi.required()
-    };
-    return Joi.validate(body, schema);
-}
-
-function validateRetrieval(body){
-    const schema = {
-        username: Joi.string().required(),
-        answers: Joi.required()
-    };
-    return Joi.validate(body, schema);
-}
-
-
-router.get('/GetPOIs', async function GetPOIs(req, res) {
+router.get('/getPOIs', async function GetPOIs(req, res) {
     try {
         const pois = await DButilsAzure.execQuery('SELECT [poiId],[poiName],[categoryName],[poiPicture],[rank],[poiDescription] FROM [dbo].[PointsOfInterests]');
 
@@ -168,15 +176,18 @@ router.get('/GetPOIs', async function GetPOIs(req, res) {
 });
 
 
-router.get('/GetPOIByPOIName/:POI_name', async function GetPOIs(req, res) {
-
+router.get('/getPOIByPOIName/:POI_name', async function GetPOIs(req, res) {
+    const {error} = validatePOIName(req.params);
+    if(error) {
+        res.status(400).send(error.details[0].message);
+        return;
+    }
     let poiNameWithoutSpace = req.params["POI_name"].split('_').join(' ');
-    console.log(poiNameWithoutSpace);
     try {
-        const pois = await DButilsAzure.execQuery('SELECT [poiId],[poiName],[poiPicture] FROM [dbo].[PointsOfInterests]  WHERE [dbo].[PointsOfInterests].poiName=' + '\'' +poiNameWithoutSpace+'\'' );
+        const poi = await DButilsAzure.execQuery('SELECT [poiId],[poiName],[poiPicture] FROM [dbo].[PointsOfInterests]  WHERE [dbo].[PointsOfInterests].poiName=' + '\'' +poiNameWithoutSpace+'\'' );
 
-        if (Object.keys(pois).length > 0 ) {
-            res.status(200).send(pois);
+        if (Object.keys(poi).length > 0 ) {
+            res.status(200).send(poi);
         }
         else
             res.status(404).send({message: 'There is no poi with the chosen name in the DB'});
@@ -209,4 +220,28 @@ router.get('/GetPOIInformation/:POI_id', async function GetPOIs(req, res) {
     }
 
 });
+
+function insertIntoTable(tableName, values){
+    let query = 'INSERT INTO ' + tableName + ' VALUES (';
+    for(let i = 0; i < values.length - 1; i++)
+    {
+        query += values[i] + ',';
+    }
+
+    query += values[values.length - 1] + ')';
+
+    DButilsAzure.execQuery(query).then(
+        function() {
+            console.log("success") }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+function validatePOIName(params){
+    const schema = {
+        POI_name: Joi.string().required()
+    };
+    return Joi.validate(params, schema);
+}
+
 module.exports = router;

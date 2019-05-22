@@ -5,72 +5,54 @@ const DButilsAzure = require('./DButils');
 
 
 
-router.get('/GetTwoSavedPOI/:userId', async function GetTwoSavedPOI(req, res) {
+router.get('/getTwoLastSavedPOI/:userID', async function GetTwoSavedPOI(req, res) {
+    const {error} = validateUserID(req.params);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
     try {
-        const twoPois = await DButilsAzure.execQuery('SELECT TOP(2) PointsOfInterests.poiId, poiName, poiPicture FROM UsersFavoritePOI INNER JOIN PointsOfInterests ON UsersFavoritePOI.poiId = PointsOfInterests.poiId WHERE UsersFavoritePOI.userId=' +req.params["userId"]+' ORDER BY updatedTime DESC');
-
-       if (Object.keys(twoPois).length != 0)
-           res.status(200).send(twoPois);
+        const twoPoisArray = await DButilsAzure.execQuery('SELECT TOP 2 PointsOfInterests.poiId, poiName, poiPicture ' +
+            'FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
+            'ON UsersFavoritePOI.poiId = PointsOfInterests.poiId ' +
+            'WHERE UsersFavoritePOI.userId = ' +  '\'' + req.params.userID + '\'' + ' ORDER BY updatedTime DESC');
+        if (Object.keys(twoPoisArray).length >= 0)
+             res.status(200).send(twoPoisArray);
         else
-            res.status(404).send({message: 'You did not save any points of views'});
+            res.status(404).send({message: 'Need at least 2 saved POIs in order to get them'});
     }
     catch(err){
-        res.status(404).send({message: 'something went wrong in the DB'});
+        res.status(404).send({message: 'something went wrong'});
     }
-
-
 });
 
-router.get('/GetRecommendedPOI/:userId', async function GetRecommendedPOI(req, res) {
+router.get('/getTwoRecommendedPOI/:userID', async function GetRecommendedPOI(req, res) {
+    const {error} = validateUserID(req.params);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
     try {
-
-        const chosenCategories = await DButilsAzure.execQuery('SELECT firstCategoryName ,secondCategoryName FROM Users WHERE userId ='+req.params["userId"]);
-
+        const chosenCategories = await DButilsAzure.execQuery('SELECT firstCategoryName ,secondCategoryName FROM Users WHERE userId = ' + req.params["userID"]);
         const firstRecommendedPOI = await DButilsAzure.execQuery('SELECT [poiId] ,[poiName] ,[poiPicture] FROM [dbo].[PointsOfInterests] WHERE rank=(SELECT MAX(rank) FROM [dbo].[PointsOfInterests] WHERE [dbo].[PointsOfInterests].categoryName= '+ '\'' + chosenCategories[0]['firstCategoryName'] + '\')' );
         const secondRecommendedPOI = await DButilsAzure.execQuery('SELECT [poiId] ,[poiName] ,[poiPicture] FROM [dbo].[PointsOfInterests] WHERE rank=(SELECT MAX(rank) FROM [dbo].[PointsOfInterests] WHERE [dbo].[PointsOfInterests].categoryName=' + '\'' + chosenCategories[0]['secondCategoryName'] + '\')' );
         let RecommendedPOI = [];
         RecommendedPOI[0] = firstRecommendedPOI[0];
         RecommendedPOI[1] = secondRecommendedPOI[0];
 
-        if (Object.keys(RecommendedPOI).length > 0 ) {
+        if (Object.keys(RecommendedPOI).length === 2) {
             res.status(200).send(RecommendedPOI);
         }
         else
-            res.status(404).send({message: 'something went wrong in the DB'});
+            res.status(404).send({message: 'could not find to POIs under the user favorite categories'});
     }
     catch(err){
-        res.status(404).send({message: 'Authentication failed - something went wrong'});
+        res.status(404).send({message: 'something went wrong'});
     }
 
 });
 
 
-router.delete('/DeleteSavedPOI', async function DeleteSavedPOI (req, res)  {
-    const {error} = validateDeleteSavedPOI(req.body);
-    if(error){
-        res.status(400).send(error.details[0].message);
-        return;
-    }
-    try {
-        await DButilsAzure.execQuery('DELETE FROM [dbo].[UsersFavoritePOI] WHERE userId=' + '\'' + req.body.userId + '\'' + ' AND poiId=' + '\'' + req.body.poiId + '\'');
-        res.status(404).send({success: true, message: 'success'});
-    }
-    catch(err){
-        res.status(404).send({success: false, message: 'something went wrong'});
-    }
-});
-
-function validateDeleteSavedPOI(body){
-    const schema = {
-        userId: Joi.string().required(),
-        poiId: Joi.string().required()
-    };
-    return Joi.validate(body, schema);
-}
-
-
-
-//TODO: finish this function
 router.post('/SavePOI', async function SavePOI (req, res)  {
     const {error} = validateSavePoi(req.body);
     if(error){
@@ -79,7 +61,7 @@ router.post('/SavePOI', async function SavePOI (req, res)  {
     }
     try {
         await DButilsAzure.execQuery('INSERT INTO [dbo].[UsersFavoritePOI] ([userId] ,[poiId] ,[poiOrder]) VALUES ('+ req.body.userId + ',' + req.body.poiId + ',' + req.body.poiOrder+ ')');
-         res.status(200).send({success: true, message: 'success - POI was saved'});
+        res.status(200).send({success: true, message: 'success - POI was saved'});
 
     }
     catch(err){
@@ -96,8 +78,85 @@ function validateSavePoi(body){
     return Joi.validate(body, schema);
 }
 
-/*
-//TODO: finish this function
+
+router.delete('/DeleteSavedPOI', async function DeleteSavedPOI (req, res)  {
+    const {error} = validateDeleteSavedPOI(req.body);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    try {
+        await DButilsAzure.execQuery('DELETE FROM [dbo].[UsersFavoritePOI] WHERE userId=' + '\'' + req.body.userId + '\'' + ' AND poiId=' + '\'' + req.body.poiId + '\'');
+        res.status(200).send({success: true, message: 'success'});
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'something went wrong'});
+    }
+});
+
+function validateDeleteSavedPOI(body){
+    const schema = {
+        userId: Joi.string().required(),
+        poiId: Joi.string().required()
+    };
+    return Joi.validate(body, schema);
+}
+
+
+
+//getting all favorite POIs of a specific user by the order that the user wanted to see them
+router.get('/getUserSavedPOIs/:userID', async function GetUsersSavedPois(req, res){
+    const {error} = validateUserID(req.params);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    try{
+        const userPOIs = await DButilsAzure.execQuery('SELECT PointsOfInterests.poiId, poiName, poiPicture FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
+            'ON UsersFavoritePOI.poiId = PointsOfInterests.poiId ' +
+            'WHERE UsersFavoritePOI.userId = '  + req.params["userID"] +
+            ' ORDER BY poiOrder DESC');
+        res.status(200).send(userPOIs);
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'getting POIs failed - something went wrong'});
+    }
+});
+
+
+//Change the order of the POIs of a specific user, the order is saved in the UsersFavoritePOI table
+router.put('/changeOrderOfSavedPOIs', async function changePOIorder(req, res){
+    const {error} = validatePOIorder(req.body);
+    if (error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    try{
+        await DButilsAzure.execQuery('DELETE FROM UsersFavoritePOI WHERE userId = ' + '\'' + req.body.userID + '\'');
+        for(let i = 0; i < req.body.order.length; i++)
+        {
+            await DButilsAzure.execQuery('INSERT INTO UsersFavoritePOI (userId, poiId, poiOrder)' +
+                'VALUES (' + '\'' + req.body.userID + '\', \'' +
+            req.body.order[i]['poiID'] + '\', \'' + req.body.order[i]['order'] + '\'' + ')');
+        }
+        res.status(200).send({success: true, message : 'order changed successfully'});
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'saving order failed - something went wrong'});
+    }
+});
+
+
+function validatePOIorder(body){
+    const schema = {
+        userID: Joi.number().required(),
+        order: Joi.required()
+    };
+    return Joi.validate(body, schema);
+}
+
+
+//Save a critic of a user in the Critics table
 router.post('/saveCritic', async function saveCritic(req,res){
     const {error} = validateCritic(req.body);
     if (error){
@@ -111,11 +170,10 @@ router.post('/saveCritic', async function saveCritic(req,res){
             currID = 1;
         else
             currID = maxID[0][''] + 1;
-        let timestamp = + new Date();
 
-        await DButilsAzure.execQuery('INSERT INTO Critics (criticId, userId, poiId, criticDate, criticText, rank) VALUES (' + currID.toString() + ', "' + req.body.userID + '", "' +
-            req.body.poiID + '", ' + timestamp.toString() + ', "' + req.body.critic_text + '", "' + req.body.rank + '")');
-        res.status(200).send({success: true, message : 'Critic saved successfully'});
+        await DButilsAzure.execQuery('INSERT INTO Critics (criticId, userId, poiId, criticText, rank) VALUES (' + currID.toString() + ', \'' + req.body.userID + '\', \'' +
+            req.body.poiID + '\', \'' + req.body.critic_text + '\', \'' + req.body.rank + '\')');
+        res.status(200).send({success: true, message : 'critic saved successfully'});
     }
     catch(err){
         res.status(404).send({success: false, message: 'saving critic failed - something went wrong'});
@@ -136,8 +194,12 @@ function validateCritic(body) {
 
 
 
-*/
-
+function validateUserID(params){
+    const schema = {
+        userID: Joi.number().required()
+    };
+    return Joi.validate(params, schema);
+}
 
 
 module.exports = router;
