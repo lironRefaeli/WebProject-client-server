@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Guest.js" beforeDir="false" afterPath="$PROJECT_DIR$/Guest.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -21,8 +20,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Guest.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="149" column="33" lean-forward="true" selection-start-line="149" selection-start-column="33" selection-end-line="149" selection-end-column="33" />
+            <state relative-caret-position="135">
+              <caret line="17" column="133" selection-start-line="17" selection-start-column="133" selection-end-line="17" selection-end-column="133" />
             </state>
           </provider>
         </entry>
@@ -30,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/User.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="536">
-              <caret line="192" column="1" selection-start-line="192" selection-start-column="1" selection-end-line="192" selection-end-column="1" />
+            <state relative-caret-position="148">
+              <caret line="201" lean-forward="true" selection-start-line="201" selection-end-line="201" />
             </state>
           </provider>
         </entry>
@@ -39,8 +38,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="51" column="23" lean-forward="true" selection-start-line="51" selection-start-column="9" selection-end-line="51" selection-end-column="23" />
+            <state relative-caret-position="935">
+              <caret line="55" column="52" selection-start-line="55" selection-start-column="52" selection-end-line="55" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -48,8 +47,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="29" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+            <state relative-caret-position="238">
+              <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -62,7 +61,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DButils.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-340">
+            <state relative-caret-position="17">
               <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
             </state>
           </provider>
@@ -88,9 +87,16 @@
       <find>GetUserSavedPOI</find>
       <find>DeleteSavedPOI</find>
       <find>validate</find>
+      <find>three</find>
+      <find>validateRegistration</find>
+      <find>insertIntoTable</find>
+      <find>.get</find>
+      <find>getques</find>
+      <find>getpoii</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -106,10 +112,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1199" />
-    <option name="y" value="117" />
-    <option name="width" value="1295" />
-    <option name="height" value="695" />
+    <option name="x" value="-18" />
+    <option name="y" value="-18" />
+    <option name="width" value="2916" />
+    <option name="height" value="1566" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -133,7 +139,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/שנה ד/סמסטר ב/סביבות פיתוח/עבודות 3.1 ו-3.2/3.2 - Server/Adi - server" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/שנה ד/סמסטר ב/סביבות פיתוח/עבודות 3.1 ו-3.2/3.3 Client/Adi Client" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -170,7 +176,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="cceccad4-fd6d-49bb-b78f-ea4ad00af60e" name="Default Changelist" comment="" />
+      <changelist id="a71c9688-ddeb-4761-8d0d-6039174107b7" name="Default Changelist" comment="" />
       <created>1557929331839</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -179,6 +185,7 @@
       <workItem from="1558090025480" duration="11011000" />
       <workItem from="1558343086820" duration="4176000" />
       <workItem from="1558351748216" duration="20561000" />
+      <workItem from="1559046521632" duration="8380000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit">
       <created>1557929558094</created>
@@ -208,22 +215,30 @@
       <option name="project" value="LOCAL" />
       <updated>1558370422602</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="finished all the functions, need to check things">
+      <created>1558523444537</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1558523444537</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51514000" />
+    <option name="totallyTimeSpent" value="63452000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14278187" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21860096" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="npm" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.2881907" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.37833038" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -245,7 +260,8 @@
     <MESSAGE value="Changed some little stuff" />
     <MESSAGE value="finished guest file" />
     <MESSAGE value="user file was updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="user file was updated" />
+    <MESSAGE value="finished all the functions, need to check things" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished all the functions, need to check things" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/index.js">
@@ -255,20 +271,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package-lock.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="29" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -293,31 +299,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DButils.js">
+    <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-340">
-          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+        <state relative-caret-position="935">
+          <caret line="55" column="52" selection-start-line="55" selection-start-column="52" selection-end-line="55" selection-end-column="52" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.js">
+    <entry file="file://$PROJECT_DIR$/package-lock.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="51" column="23" lean-forward="true" selection-start-line="51" selection-start-column="9" selection-end-line="51" selection-end-column="23" />
+        <state relative-caret-position="238">
+          <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/User.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
-          <caret line="192" column="1" selection-start-line="192" selection-start-column="1" selection-end-line="192" selection-end-column="1" />
+        <state relative-caret-position="148">
+          <caret line="201" lean-forward="true" selection-start-line="201" selection-end-line="201" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DButils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Guest.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="149" column="33" lean-forward="true" selection-start-line="149" selection-start-column="33" selection-end-line="149" selection-end-column="33" />
+        <state relative-caret-position="135">
+          <caret line="17" column="133" selection-start-line="17" selection-start-column="133" selection-end-line="17" selection-end-column="133" />
         </state>
       </provider>
     </entry>

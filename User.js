@@ -16,7 +16,7 @@ router.get('/getTwoLastSavedPOI/:userID', async function GetTwoSavedPOI(req, res
             'FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
             'ON UsersFavoritePOI.poiId = PointsOfInterests.poiId ' +
             'WHERE UsersFavoritePOI.userId = ' +  '\'' + req.params.userID + '\'' + ' ORDER BY updatedTime DESC');
-        if (Object.keys(twoPoisArray).length >= 0)
+        if (Object.keys(twoPoisArray).length === 2)
              res.status(200).send(twoPoisArray);
         else
             res.status(404).send({message: 'Need at least 2 saved POIs in order to get them'});
@@ -173,6 +173,11 @@ router.post('/saveCritic', async function saveCritic(req,res){
 
         await DButilsAzure.execQuery('INSERT INTO Critics (criticId, userId, poiId, criticText, rank) VALUES (' + currID.toString() + ', \'' + req.body.userID + '\', \'' +
             req.body.poiID + '\', \'' + req.body.critic_text + '\', \'' + req.body.rank + '\')');
+
+        //updating the POI rank
+        await DButilsAzure.execQuery('UPDATE PointsOfInterests SET rank = ' +
+            '(SELECT AVG(Critics.rank) FROM Critics WHERE poiId = ' + '\'' + req.body.poiID + '\'' + ')' +
+            'WHERE poiId = ' + '\'' + req.body.poiID + '\'');
         res.status(200).send({success: true, message : 'critic saved successfully'});
     }
     catch(err){
@@ -180,6 +185,7 @@ router.post('/saveCritic', async function saveCritic(req,res){
     }
 
 });
+
 
 
 function validateCritic(body) {

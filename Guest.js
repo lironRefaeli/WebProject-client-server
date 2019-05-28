@@ -15,7 +15,11 @@ router.post('/register', async function register (req, res) {
         return;
     }
     try{
-
+        const countryExists = await DButilsAzure.execQuery('SELECT * FROM Countries WHERE name = ' + '\'' + req.body.country + '\'');
+        if(Object.keys(countryExists).length === 0){
+            res.status(404).send({success: false, message: 'Chosen Country is not valid'});
+            return;
+        }
         let maxID = await DButilsAzure.execQuery('SELECT MAX(userId) FROM Users');
         let currID;
         if(maxID[0][''] === null)
@@ -25,7 +29,8 @@ router.post('/register', async function register (req, res) {
         insertIntoTable('Users',[currID.toString(), '\'' + req.body.username + '\'', '\'' + req.body.password + '\'',
             '\'' + req.body.firstname + '\'', '\'' + req.body.lastname + '\'', '\'' + req.body.city + '\'',
             '\'' + req.body.country + '\'', '\'' + req.body.email + '\'',
-            '\'' + req.body.categories[0] + '\'', '\'' + req.body.categories[1] + '\'', '\'' + req.body.answers[0] + '\'',
+            '\'' + req.body.categories[0] + '\'', '\'' + req.body.categories[1] + '\'', '\'' + req.body.questions[0] + '\'',
+            '\'' + req.body.questions[1] + '\'', '\'' + req.body.answers[0] + '\'',
             '\'' + req.body.answers[1] + '\'']);
         res.status(200).send({success: true, message: "Registration completed successfully"});
     }
@@ -45,13 +50,37 @@ function validateRegistration(body){
         country : Joi.string().min(2).max(30).required(),
         email: Joi.string().email({ minDomainAtoms: 2 }),
         categories: Joi.required(),
+        questions: Joi.required(),
         answers: Joi.required()
     };
     return Joi.validate(body, schema);
 }
 
+router.get('/getCategories', async function getCategories (req, res) {
+    try{
+        let categories = await DButilsAzure.execQuery('SELECT categoryName FROM Categories');
+        if (Object.keys(categories).length > 0)
+            res.status(200).send(questions);
+        categories
+            res.status(404).send({success: false, message: 'Could not find any categories'});
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'DB error - something went wrong'});
+    }
+});
 
-
+router.get('/getQuestions', async function getQuestions (req, res) {
+    try{
+        let questions = await DButilsAzure.execQuery('SELECT question FROM Questions');
+        if (Object.keys(questions).length > 0)
+            res.status(200).send(questions);
+        else
+            res.status(404).send({success: false, message: 'Could not find any questions'});
+        }
+        catch(err){
+            res.status(404).send({success: false, message: 'DB error - something went wrong'});
+        }
+});
 
 //Log in attempting
 router.post('/login', async function login (req, res)  {
@@ -121,7 +150,8 @@ router.post('/passRetrieval', async function retrieval (req, res) {
     }
     try{
         const password = await DButilsAzure.execQuery('SELECT userPassword FROM Users WHERE userName = ' + '\'' + req.body.username + '\'' +
-            ' AND firstAnswer = ' + '\'' + req.body.answers[0] + '\'' + ' AND secondAnswer = ' + '\'' + req.body.answers[1] + '\'');
+            ' AND question1 = ' + '\'' + req.body.questions[0] + '\'' + ' AND question2 = ' + '\'' + req.body.questions[1] + '\'' +
+        ' AND answer1 = ' + '\'' + req.body.answers[0] + '\'' + ' AND answer2 = ' + '\'' + req.body.answers[1] + '\'');
         if(Object.keys(password).length > 0)
             res.status(200).send(password);
         else
@@ -135,11 +165,39 @@ router.post('/passRetrieval', async function retrieval (req, res) {
 function validateRetrieval(body){
     const schema = {
         username: Joi.string().required(),
+        questions: Joi.required(),
         answers: Joi.required()
     };
     return Joi.validate(body, schema);
 }
 
+//for retrieving password, the client should get the questions this specific user chose when he registered
+router.get('/getUserQuestions/:userName', async function retrieval (req, res) {
+    const {error} = validateUserName(req.params);
+    if(error) {
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    try{
+        console.log(req.params);
+        const questions = await DButilsAzure.execQuery('SELECT question1, question2 FROM Users WHERE userName = ' + '\'' + req.params['userName'] + '\'');
+        if(Object.keys(questions).length > 0)
+            res.status(200).send(questions);
+        else
+            res.status(404).send({success: false, message: 'This username does not exists'});
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'DB error'});
+    }
+});
+
+
+function validateUserName(body){
+    const schema = {
+        userName: Joi.string().required()
+    };
+    return Joi.validate(body, schema);
+}
 
 
 //Returns 3 random POIs with a rank of 3 or above
@@ -176,6 +234,7 @@ router.get('/getPOIs', async function GetPOIs(req, res) {
 });
 
 
+/*
 router.get('/getPOIByPOIName/:POI_name', async function GetPOIs(req, res) {
     const {error} = validatePOIName(req.params);
     if(error) {
@@ -197,7 +256,7 @@ router.get('/getPOIByPOIName/:POI_name', async function GetPOIs(req, res) {
     }
 
 });
-
+*/
 
 router.get('/GetPOIInformation/:POI_id', async function GetPOIs(req, res) {
     try {
@@ -210,6 +269,8 @@ router.get('/GetPOIInformation/:POI_id', async function GetPOIs(req, res) {
 
 
         if (Object.keys(poiInfoAndCritics[0]).length > 0 ) {
+            await DButilsAzure.execQuery('UPDATE PointsOfInterests SET numOfViews = numOfViews + 1 WHERE poiId = '
+                + req.params["POI_id"]);
             res.status(200).send(poiInfoAndCritics);
         }
         else
