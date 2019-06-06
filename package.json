@@ -2,7 +2,7 @@
   "name": "server3.2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "Server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "angular": "^1.7.8",
     "body-parser": "^1.19.0",
     "express": "^4.16.4",
     "joi": "^14.3.1",
