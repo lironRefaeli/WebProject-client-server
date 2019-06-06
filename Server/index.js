@@ -5,11 +5,16 @@ const Guest = require('./Guest');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const superSecret = "SUMsumOpen";
+const cors = require('cors');
+app.use(cors());
+const morgan = require('morgan');
 
 
 //for parsing the json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(morgan('dev'));
 
 app.use('/',Guest);
 
@@ -52,5 +57,5 @@ app.use('/loggedIn', (req, res, next) => {
 app.use('/loggedIn/user',User);
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
