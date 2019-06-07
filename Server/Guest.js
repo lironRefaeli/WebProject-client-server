@@ -60,8 +60,7 @@ router.get('/getCategories', async function getCategories (req, res) {
     try{
         let categories = await DButilsAzure.execQuery('SELECT categoryName FROM Categories');
         if (Object.keys(categories).length > 0)
-            res.status(200).send(questions);
-        categories
+            res.status(200).send(categories);
             res.status(404).send({success: false, message: 'Could not find any categories'});
     }
     catch(err){
