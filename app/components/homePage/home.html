@@ -4,9 +4,38 @@
         style="font-family: 'Calibri'; margin:1% 0 0 0; font-size: 56px;">
         Welcome to NYC Info Page
     </h3>
-    <p> If you are not registered yet, please click on the 'register' button above,
-        else please login to get a full experience.
-
+    <p style="font-family: 'Calibri'; font-size: 24px;"> If you are not registered yet, please click on the 'register' button above,
+        else please login to get the full experience.
     </p>
-    {{ vm.threePOIs[0]["poiId"] }}
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div>
+    <div flex layout="row" layout-align="space-around">
+        <div layout="column" ng-repeat="poi in vm.threePOIs" >
+            <md-card style="height: 350px; width: 350px">
+                <img ng-src="metadata/POIpictures/{{poi['poiPicture'] }}.jpg" class="md-card-image" alt="image caption">
+                    <div layout="row" layout-align="space-around center" flex>
+                    <md-card-content>
+                        <h3 >{{poi['poiName']}}</h3>
+                    </md-card-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="Favorite">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        </md-button>
+                    </md-card-actions>
+                    </div>
+            </md-card>
+        </div>
+    </div>
+</div>
+
