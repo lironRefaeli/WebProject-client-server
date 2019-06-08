@@ -19,7 +19,7 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         return $http.get(serverUrl + 'getQuestions')
     };
     this.getUserQuestions = function (data) {
-        return $http.get(serverUrl + 'getQuestions/' + data)
+        return $http.get(serverUrl + 'getUserQuestions/' + data)
     }
 
 }]).controller('usersController', ['toastr', '$location', '$scope', 'usersService', '$mdDialog',
@@ -30,22 +30,28 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         vm.importCategories = false;
         vm.importCountries = false;
         vm.importQuestions = false;
+        vm.importUserQuestions = false;
 
         vm.user = undefined;
         vm.loginUser = undefined;
+        vm.passRetrivalUser = [];
+        vm.userAnswers = [];
         vm.countries = [];
         vm.questions = [];
         vm.categories = [];
+        vm.dataForPassRetrivel = [];
 
         vm.signUp = signUp;
-        vm.restorePassword = restorePassword;
+        vm.openPassRetrievalPage = openPassRetrievalPage;
         vm.login = login;
+        vm.loadUserQuestions = loadUserQuestions;
+        vm.restoreUserPassword = restoreUserPassword;
         loadCategories();
         loadCountries();
         loadQuestions();
 
 
-        function login(){
+        function login() {
             usersService.login(vm.loginUser).then(function (response) {
                 toastr.success('login Succeeded');
                 console.log(response);
@@ -60,14 +66,12 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         }
 
         function signUp() {
-            if (vm.user.categories['0'] === vm.user.categories['1'] ) {
+            if (vm.user.categories['0'] === vm.user.categories['1']) {
                 toastr.error('You must choose different categories');
 
-            }
-            else if(vm.user.questions['0'] === vm.user.questions['1']){
+            } else if (vm.user.questions['0'] === vm.user.questions['1']) {
                 toastr.error('You must choose different questions');
-            }
-            else {
+            } else {
                 usersService.register(vm.user).then(function (response) {
                     toastr.success('Registration Succeeded');
                     console.log(response);
@@ -120,8 +124,43 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
             });
         }
 
-        function restorePassword() {
+        function openPassRetrievalPage() {
             $location.path('/passRetrieval');
+        }
+
+        function loadUserQuestions() {
+            usersService.getUserQuestions(vm.passRetrivalUser.username).then(function (response) {
+                vm.passRetrivalUser = response.data;
+                vm.importUserQuestions = true;
+            }, function (response) {
+                toastr.error('Failed to load data from server.');
+                console.log(response);
+            });
+        }
+
+        function restoreUserPassword() {
+            if (vm.userAnswers[0] === vm.passRetrivalUser[0]['answer1'] && vm.userAnswers[1] === vm.passRetrivalUser[0]['answer2']) {
+
+                vm.dataForPassRetrivel.username = vm.passRetrivalUser.username;
+                vm.dataForPassRetrivel.questions = [];
+                vm.dataForPassRetrivel['questions'][0] = vm.passRetrivalUser[0]['question1'];
+                vm.dataForPassRetrivel['questions'][1] = vm.passRetrivalUser[0]['question2'];
+                vm.dataForPassRetrivel.answers = [];
+                vm.dataForPassRetrivel['answers'][0] = vm.userAnswers[0];
+                vm.dataForPassRetrivel['answers'][1] = vm.userAnswers[1];
+
+                usersService.passRetrieval(JSON.parse(vm.dataForPassRetrivel)).then(function (response) {
+                toastr.success('Your password is:' + response.data['userPassword']);
+                $location.path('/login');
+
+                }, function (response) {
+                    toastr.error('Failed to load data from server.');
+                    console.log(response);
+                });
+            } else {
+                vm.userAnswers = [];
+                toastr.error('One of yours answers is wrong');
+            }
 
         }
 
