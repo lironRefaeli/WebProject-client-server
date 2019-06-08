@@ -1,4 +1,4 @@
-let app = angular.module('appModule',['toastr',"ngRoute", 'ngMaterial', 'ngMessages','star-rating','ngAnimate', 'ngTouch','md.chips.select','LocalStorageModule'])
+let app = angular.module('appModule',['toastr',"ngRoute", 'ngMaterial', 'ngMessages', 'ngAnimate', 'md.chips.select'])
 app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($locationProvider,toastrConfig, $routeProvider) {
 
     $locationProvider.hashPrefix('');

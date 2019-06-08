@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<form name="formLogin">
+    <md-content class="md-no-momentum">
+        <div flex layout="row" layout-align="center center">
+            <div layout="column" layout-padding ng-cloak layout-align="start start">
+                <md-input-container class="md-icon-float md-block">
+                    <label>Username</label>
+                    <input ng-model="vm.loginUser.username" name="username" type="text"
+                           required>
+                    <span ng-show="formLogin.username.$error.required">
+                            Required</span>
 
-</body>
-</html>
+                </md-input-container>
+                <md-input-container class="md-icon-float md-block">
+                    <label>Password</label>
+                    <input ng-model="vm.loginUser.password" name="password" type="password"
+                           required >
+                    <span ng-show="formLogin.password.$error.required">
+                            Required</span>
+
+                </md-input-container>
+            </div>
+        </div>
+    </md-content>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <md-button style="background-color: green; color: white" ng-disabled="form.$invalid" ng-click="vm.login()">
+            login
+        </md-button>
+        <md-button  ng-click="vm.restorePassword()">
+            restore password
+        </md-button>
+    </section>
+</form>

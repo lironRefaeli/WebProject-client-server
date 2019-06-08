@@ -1,47 +1,36 @@
 <html>
-<head><title>New York City</title>
-</head>
-<body ng-app="appModule" ng-controller="IndexController as vm" layout="column">
+<head><title>New York City</title></head>
+<body ng-app="appModule" ng-controller="IndexController as vm" layout="column" >
 
 <header>
-    <md-toolbar color="primary">
-        <div class="md-toolbar-tools" flex layout-align="space-around center" layout-md="column" layout-wrap>
-            <div flex>
-                <a href="#/home">
-                    <md-button class="md-button">
-                        Home
-                    </md-button>
-                </a>
-                <a href="#/register">
-                    <md-button ng-disabled="vm.userConnected" class="md-button">
-                        Register
-                    </md-button>
-                </a>
-                <a href="#/login">
-                    <md-button ng-disabled="vm.userConnected" class="md-button">
-                        Login
-                    </md-button>
-                </a>
-                <a href="#/logout">
-                    <md-button ng-disabled="!vm.userConnected" class="md-button">
-                        Logout
-                    </md-button>
-                </a>
-                <a href="#/points_of_interests">
-                    <md-button class="md-button">
-                        Points of Interests
-                    </md-button>
-                </a>
-                <a href="#/about">
-                    <md-button class="md-button">
-                        About
-                    </md-button>
-                </a>
+    <md-toolbar style="background-color: green; font-family: Calibri">
+        <div class="md-toolbar-tools">
+            <a href="#/home">
+                <md-button style="font-size: large"> Home </md-button>
+            </a>
+            <a href="#/register">
+                <md-button style="font-size: large" ng-disabled="vm.userConnected"> Register </md-button>
+            </a>
+            <a href="#/login">
+                <md-button style="font-size: large" ng-disabled="vm.userConnected"> Login </md-button>
+            </a>
+            <a href="#/logout">
+                <md-button style="font-size: large" ng-disabled="!vm.userConnected"> Logout </md-button>
+            </a>
+            <a href="#/points_of_interests">
+                <md-button style="font-size: large"> Points of Interests</md-button>
+            </a>
+            <a href="#/about">
+                <md-button style="font-size: large">About</md-button>
+            </a>
+            <span flex></span>
+            <div ng-show="!vm.userConnected" >hello, guest</div>
+            <div ng-show="vm.userConnected" >hello, {{vm.username}}</div>
 
-            </div>
         </div>
-    </md-toolbar>
 
+
+    </md-toolbar>
 
 </header>
 
@@ -50,11 +39,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
 <script src="index.route.js"></script>
-
-
-
-
 <script src="components/homePage/homePage.controller.js"></script>
+<script src="components/users/users.controller.js"></script>
 
 
 <!-- Angular Material Library -->
@@ -63,15 +49,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-messages.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular1-star-rating@1.2.11/dist/index.min.js"></script>
 <script src="../node_modules/md-chips-select/dist/md-chips-select.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../node_modules/md-chips-select/dist/md-chips-select.min.css">
-
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-touch.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
 <script src="../node_modules/angular-local-storage/dist/angular-local-storage.min.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
 <script src="https://npmcdn.com/angular-toastr/dist/angular-toastr.tpls.js"></script>
 <link rel="stylesheet" href="https://npmcdn.com/angular-toastr/dist/angular-toastr.css"/>
 
@@ -81,7 +63,5 @@
 <!--services-->
 
 
-</body>
-</html>
 </body>
 </html>

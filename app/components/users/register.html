@@ -1,10 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div ng-if="vm.importAllData">
+    <form name="form">
+        <md-content class="md-no-momentum">
+            <div flex layout="row" layout-align="space-around">
+                <div layout="column" layout-padding ng-cloak layout-align="start start">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Username</label>
+                        <input ng-model="vm.user.username" name="username" type="text"
+                               required ng-minlength="3" ng-maxlength="8" ng-pattern="/^[a-zA-Z]*$/">
+                        <span ng-show="form.username.$error.required">
+                            Required</span>
+                        <span ng-show="form.username.$error.minlength">
+                            Too Short</span>
+                        <span ng-show="form.username.$error.maxlength">
+                            Too Long</span>
+                        <span ng-show="form.username.$error.pattern">
+                            letters only</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Password</label>
+                        <input ng-model="vm.user.password" name="password" type="password"
+                        required minlength="5" maxlength="10" ng-pattern="/^[0-9a-zA-Z]*$/">
+                        <span ng-show="form.password.$error.required">
+                            Required</span>
+                        <span ng-show="form.password.$error.minlength">
+                            Too Short</span>
+                        <span ng-show="form.password.$error.maxlength">
+                            Too Long</span>
+                        <span ng-show="form.password.$error.pattern">
+                            letters and numbers only</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>First Name</label>
+                        <input ng-model="vm.user.firstname" name="firstname" type="text"
+                        required ng-pattern="/^[a-zA-Z]*$/">
+                        <span ng-show="form.firstname.$error.required">
+                            Required</span>
+                        <span ng-show="form.firstname.$error.pattern">
+                            letters only</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Last Name</label>
+                        <input ng-model="vm.user.lastname" name="lastname" type="text"
+                               required ng-pattern="/^[a-zA-Z]*$/">
+                        <span ng-show="form.lastname.$error.required">
+                            Required</span>
+                        <span ng-show="form.lastname.$error.pattern">
+                            letters only</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>City</label>
+                        <input ng-model="vm.user.city" name="city" type="text"
+                               required ng-pattern="/^[a-zA-Z]*$/">
+                        <span ng-show="form.city.$error.required">
+                            Required</span>
+                        <span ng-show="form.city.$error.pattern">
+                            letters only</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <md-select ng-model="vm.user.country" placeholder="Country">
+                            <md-option ng-value="country" ng-repeat="country in vm.countries">
+                                {{country}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout="column" layout-padding ng-cloak layout-align="start start">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Email</label>
+                        <input ng-model="vm.user.email" name="email" type="email"
+                        required>
+                        <span ng-show="form.email.$error.required">
+                            Required</span>
+                        <span ng-show="form.email.$error.email">
+                            invalid email</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <md-select ng-model="vm.user.categories[0]" placeholder="Category_One">
+                            <md-option ng-value="category" ng-repeat="category in vm.categories">
+                                {{category}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <md-select ng-model="vm.user.categories[1]" placeholder="Category_Two">
+                            <md-option ng-value="category" ng-repeat="category in vm.categories">
+                                {{category}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <md-select ng-model="vm.user.questions[0]" placeholder="Question_1">
+                            <md-option ng-value="question" ng-repeat="question in vm.questions">
+                                {{question}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Answer One</label>
+                        <input ng-model="vm.user.answers[0]" name="answer1" type="text"
+                        required>
+                        <span ng-show="form.answer1.$error.required">
+                            Required</span>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <md-select ng-model="vm.user.questions[1]" placeholder="Question_2">
+                            <md-option ng-value="question" ng-repeat="question in vm.questions">
+                                {{question}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Answer Two</label>
+                        <input ng-model="vm.user.answers[1]" name="answer2" type="text"
+                        required>
+                        <span ng-show="form.answer2.$error.required">
+                            Required</span>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-content>
+        <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+            <md-button style="background-color: green; color: white" ng-disabled="form.$invalid" ng-click="vm.signUp()">register!</md-button>
+        </section>
+    </form>
 
-</body>
-</html>
+</div>

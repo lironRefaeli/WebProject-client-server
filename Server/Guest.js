@@ -61,7 +61,21 @@ router.get('/getCategories', async function getCategories (req, res) {
         let categories = await DButilsAzure.execQuery('SELECT categoryName FROM Categories');
         if (Object.keys(categories).length > 0)
             res.status(200).send(categories);
+        else
             res.status(404).send({success: false, message: 'Could not find any categories'});
+    }
+    catch(err){
+        res.status(404).send({success: false, message: 'DB error - something went wrong'});
+    }
+});
+
+router.get('/getCountries', async function getCountries (req, res) {
+    try{
+        let countries = await DButilsAzure.execQuery('SELECT name FROM Countries');
+        if (Object.keys(countries).length > 0)
+            res.status(200).send(countries);
+        else
+            res.status(404).send({success: false, message: 'Could not find any Countries'});
     }
     catch(err){
         res.status(404).send({success: false, message: 'DB error - something went wrong'});
