@@ -1,5 +1,6 @@
 <html>
 <head><title>New York City</title>
+
 </head>
 <body ng-app="appModule" ng-controller="IndexController as vm" layout="column" >
 
@@ -40,30 +41,32 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
 <script src="index.route.js"></script>
+<!--controllers-->
+
 <script src="components/homePage/homePage.controller.js"></script>
 <script src="components/users/users.controller.js"></script>
 <script src="components/POI/POIinformation.controller.js"></script>
+<script src="components/userHomePage/userHomePage.controller.js"></script>
 
 
 <!-- Angular Material Library -->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-messages.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
 <script src="../node_modules/md-chips-select/dist/md-chips-select.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../node_modules/md-chips-select/dist/md-chips-select.min.css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../node_modules/angular-local-storage/dist/angular-local-storage.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
 <script src="https://npmcdn.com/angular-toastr/dist/angular-toastr.tpls.js"></script>
 <link rel="stylesheet" href="https://npmcdn.com/angular-toastr/dist/angular-toastr.css"/>
 
-<!--controllers-->
+
 <script src="index.controller.js"></script>
 
 <!--services-->
-
+<script src="components/tokenHandler/localStorage.service.js"></script>
+<script src="components/tokenHandler/setToken.service.js"></script>
 
 </body>
 </html>

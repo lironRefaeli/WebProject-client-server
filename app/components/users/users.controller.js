@@ -22,8 +22,8 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         return $http.get(serverUrl + 'getUserQuestions/' + data)
     }
 
-}]).controller('usersController', ['toastr', '$location', '$scope', 'usersService', '$mdDialog',
-    function (toastr, $location, $scope, usersService, $mdDialog) {
+}]).controller('usersController', ['toastr', '$location', '$scope', 'usersService', 'setTokenService', 'localStorageModel',
+    function (toastr, $location, $scope, usersService, setTokenService, localStorageModel) {
 
         vm = this;
         vm.importAllData = false;
@@ -55,10 +55,13 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         function login() {
             usersService.login(vm.loginUser).then(function (response) {
                 toastr.success('login Succeeded');
-                console.log(response);
+                setTokenService.set(response.data['token']);
+                localStorageModel.add('token', response.data['token']);
+                localStorageModel.add('userId', response.data['userID']);
+                localStorageModel.add('username', vm.loginUser.username);
                 $scope.$parent.vm.userConnected = true;
-                $scope.$parent.vm.username = vm.loginUser.username;
-                $location.path('/');
+                $scope.$parent.vm.username = localStorageModel.get('username');
+                $location.path('/userHomePage');
 
             }, function (response) {
                 toastr.error('Failed to login. Username or Password are incorrect');

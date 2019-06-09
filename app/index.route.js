@@ -1,5 +1,5 @@
-let app = angular.module('appModule',['toastr',"ngRoute", 'ngMaterial', 'ngMessages', 'ngAnimate', 'md.chips.select'])
-app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($locationProvider,toastrConfig, $routeProvider) {
+let app = angular.module('appModule',['toastr',"ngRoute", 'ngMaterial', 'ngAnimate', 'LocalStorageModule'])
+app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($locationProvider, toastrConfig, $routeProvider) {
 
     $locationProvider.hashPrefix('');
 
@@ -23,6 +23,10 @@ app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($loc
         .when('/POIinformation/:id',{
             templateUrl: 'components/POI/POIinformation.html',
             controller: 'POIinformationController as vm'
+        })
+        .when('/userHomePage',{
+            templateUrl: 'components/userHomePage/userHomePage.html',
+            controller: 'userHomePageController as vm'
         })
         .otherwise({redirectTo: '/'});
 
