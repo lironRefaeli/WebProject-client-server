@@ -1,16 +1,16 @@
-let app = angular.module('appModule',['toastr',"ngRoute", 'ngMaterial', 'ngAnimate', 'LocalStorageModule'])
-app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($locationProvider, toastrConfig, $routeProvider) {
+let app = angular.module('appModule', ['toastr', "ngRoute", 'ngMaterial', 'ngAnimate', 'LocalStorageModule'])
+app.config(['$locationProvider', 'toastrConfig', '$routeProvider', function ($locationProvider, toastrConfig, $routeProvider) {
 
     $locationProvider.hashPrefix('');
 
     $routeProvider
         .when('/', {
-        templateUrl: 'components/homePage/home.html',
-        controller: 'homePageController as vm'
+            templateUrl: 'components/homePage/home.html',
+            controller: 'homePageController as vm'
         })
         .when('/register', {
-        templateUrl: 'components/users/register.html',
-        controller: 'usersController as vm'
+            templateUrl: 'components/users/register.html',
+            controller: 'usersController as vm'
         })
         .when('/login', {
             templateUrl: 'components/users/login.html',
@@ -20,13 +20,17 @@ app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($loc
             templateUrl: 'components/users/passRetrieval.html',
             controller: 'usersController as vm'
         })
-        .when('/POIinformation/:id',{
+        .when('/POIinformation/:id', {
             templateUrl: 'components/POI/POIinformation.html',
             controller: 'POIinformationController as vm'
         })
-        .when('/userHomePage',{
+        .when('/userHomePage', {
             templateUrl: 'components/userHomePage/userHomePage.html',
             controller: 'userHomePageController as vm'
+        })
+        .when('/points_of_interests', {
+            templateUrl: 'components/POI/searchPOI.html',
+            controller: 'searchPOIController as vm'
         })
         .otherwise({redirectTo: '/'});
 
@@ -35,7 +39,7 @@ app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($loc
         containerId: 'toast-container',
         maxOpened: 0,
         newestOnTop: true,
-        positionClass:'toast-bottom-right' ,
+        positionClass: 'toast-bottom-right',
         preventDuplicates: true,
         preventOpenDuplicates: false,
         progressBar: true,
