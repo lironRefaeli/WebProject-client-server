@@ -34,12 +34,13 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
 
         vm.user = undefined;
         vm.loginUser = undefined;
-        vm.passRetrivalUser = [];
+        vm.userQuestionsAndAnswers = undefined;
+        vm.retrievalData = undefined;
         vm.userAnswers = [];
         vm.countries = [];
         vm.questions = [];
         vm.categories = [];
-        vm.dataForPassRetrivel = [];
+        //vm.dataForPassRetrieval = undefined;
 
         vm.signUp = signUp;
         vm.openPassRetrievalPage = openPassRetrievalPage;
@@ -129,8 +130,8 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         }
 
         function loadUserQuestions() {
-            usersService.getUserQuestions(vm.passRetrivalUser.username).then(function (response) {
-                vm.passRetrivalUser = response.data;
+            usersService.getUserQuestions(vm.retrievalData.username).then(function (response) {
+                vm.userQuestionsAndAnswers = response.data;
                 vm.importUserQuestions = true;
             }, function (response) {
                 toastr.error('Failed to load data from server.');
@@ -139,18 +140,10 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
         }
 
         function restoreUserPassword() {
-            if (vm.userAnswers[0] === vm.passRetrivalUser[0]['answer1'] && vm.userAnswers[1] === vm.passRetrivalUser[0]['answer2']) {
+            if (vm.retrievalData.answers[0] === vm.userQuestionsAndAnswers[0]['answer1'] && vm.retrievalData.answers[1] === vm.userQuestionsAndAnswers[0]['answer2']) {
 
-                vm.dataForPassRetrivel.username = vm.passRetrivalUser.username;
-                vm.dataForPassRetrivel.questions = [];
-                vm.dataForPassRetrivel['questions'][0] = vm.passRetrivalUser[0]['question1'];
-                vm.dataForPassRetrivel['questions'][1] = vm.passRetrivalUser[0]['question2'];
-                vm.dataForPassRetrivel.answers = [];
-                vm.dataForPassRetrivel['answers'][0] = vm.userAnswers[0];
-                vm.dataForPassRetrivel['answers'][1] = vm.userAnswers[1];
-
-                usersService.passRetrieval(JSON.parse(vm.dataForPassRetrivel)).then(function (response) {
-                toastr.success('Your password is:' + response.data['userPassword']);
+                usersService.passRetrieval(vm.retrievalData).then(function (response) {
+                toastr.success('Your password is:' + response.data[0]['userPassword']);
                 $location.path('/login');
 
                 }, function (response) {

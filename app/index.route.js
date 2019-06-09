@@ -19,7 +19,12 @@ app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($loc
         .when('/passRetrieval', {
             templateUrl: 'components/users/passRetrieval.html',
             controller: 'usersController as vm'
-        }).otherwise({redirectTo: '/'});
+        })
+        .when('/POIinformation',{
+            templateUrl: 'components/POI/POIinformation.html',
+            controller: 'POIinformationController as vm'
+        })
+        .otherwise({redirectTo: '/'});
 
     angular.extend(toastrConfig, {
         autoDismiss: false,

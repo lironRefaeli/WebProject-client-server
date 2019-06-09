@@ -1,0 +1,63 @@
+<form name="formPassRetrivalUsername" ng-show="!vm.importUserQuestions">
+    <md-content class="md-no-momentum">
+        <div flex layout="row" layout-align="center center">
+            <div layout="column" layout-padding ng-cloak layout-align="start start">
+                <md-input-container class="md-icon-float md-block">
+                    <label>Username</label>
+                    <input ng-model="vm.retrievalData.username" name="username" type="text"
+                           required>
+                    <span ng-show="formPassRetrivalUsername.username.$error.required">
+                            Required</span>
+                </md-input-container>
+
+            </div>
+
+            <section layout="column" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-button style="background-color: green; color: white" ng-disabled="formPassRetrivalUsername.$invalid" ng-click="vm.loadUserQuestions()">
+                    ask me questions!
+                </md-button>
+
+            </section>
+        </div>
+    </md-content>
+
+</form>
+
+<form name="formPassRetrival" ng-show="vm.importUserQuestions">
+    <md-content class="md-no-momentum">
+        <div flex layout="row" layout-align="center center">
+            <div layout="column" layout-padding ng-cloak layout-align="start start">
+
+                <span> question 1: {{vm.userQuestionsAndAnswers[0]['question1']}}</span>
+
+                <md-input-container class="md-icon-float md-block">
+                    <label>Answer One</label>
+                    <input ng-model="vm.retrievalData.answers[0]" name="answer1" type="text"
+                           required>
+                    <span ng-show="formPassRetrival.answer1.$error.required">
+                            Required</span>
+                </md-input-container>
+                <span> question 2: {{vm.userQuestionsAndAnswers[0]['question2']}}</span>
+
+                <md-input-container class="md-icon-float md-block">
+                    <label>Answer Two</label>
+                    <input ng-model="vm.retrievalData.answers[1]" name="answer2" type="text"
+                           required>
+                    <span ng-show="formPassRetrival.answer2.$error.required">
+                            Required</span>
+                </md-input-container>
+
+            </div>
+
+
+        </div>
+        <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+            <md-button style="background-color: green; color: white" ng-disabled="formPassRetrival.$invalid" ng-click="vm.restoreUserPassword()">
+                bring my password
+            </md-button>
+
+        </section>
+    </md-content>
+
+</form>
+

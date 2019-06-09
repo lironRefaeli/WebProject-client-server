@@ -163,7 +163,6 @@ router.post('/passRetrieval', async function retrieval (req, res) {
     }
     try{
         const password = await DButilsAzure.execQuery('SELECT userPassword FROM Users WHERE userName = ' + '\'' + req.body.username + '\'' +
-            ' AND question1 = ' + '\'' + req.body.questions[0] + '\'' + ' AND question2 = ' + '\'' + req.body.questions[1] + '\'' +
         ' AND answer1 = ' + '\'' + req.body.answers[0] + '\'' + ' AND answer2 = ' + '\'' + req.body.answers[1] + '\'');
         if(Object.keys(password).length > 0)
             res.status(200).send(password);
@@ -178,7 +177,6 @@ router.post('/passRetrieval', async function retrieval (req, res) {
 function validateRetrieval(body){
     const schema = {
         username: Joi.string().required(),
-        questions: Joi.required(),
         answers: Joi.required()
     };
     return Joi.validate(body, schema);
@@ -193,7 +191,7 @@ router.get('/getUserQuestions/:userName', async function retrieval (req, res) {
     }
     try{
         console.log(req.params);
-        const questions = await DButilsAzure.execQuery('SELECT question1, question2 FROM Users WHERE userName = ' + '\'' + req.params['userName'] + '\'');
+        const questions = await DButilsAzure.execQuery('SELECT question1, question2, answer1, answer2 FROM Users WHERE userName = ' + '\'' + req.params['userName'] + '\'');
         if(Object.keys(questions).length > 0)
             res.status(200).send(questions);
         else
