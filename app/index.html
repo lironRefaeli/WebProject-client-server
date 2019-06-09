@@ -17,7 +17,7 @@
                 <md-button style="font-size: large" ng-disabled="vm.userConnected"> Login </md-button>
             </a>
             <a href="#/logout">
-                <md-button style="font-size: large" ng-disabled="!vm.userConnected"> Logout </md-button>
+                <md-button ng-click="vm.logout()" style="font-size: large" ng-disabled="!vm.userConnected"> Logout </md-button>
             </a>
             <a href="#/points_of_interests">
                 <md-button style="font-size: large"> Points of Interests</md-button>

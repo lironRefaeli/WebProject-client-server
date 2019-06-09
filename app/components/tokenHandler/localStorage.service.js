@@ -19,4 +19,8 @@ angular.module("appModule")
             localStorageService.set(key, value);
         };
 
+        this.deleteValue = function (key) {
+            localStorageService.remove(key);
+        };
+
     }]);

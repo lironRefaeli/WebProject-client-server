@@ -7,13 +7,16 @@ angular.module('appModule').service('homeService', ['$http', function($http){
         return $http.get(serverUrl + 'GetPOIInformation/' + data);
     };
 
-}]).controller('homePageController', ['$scope', 'homeService', '$route', '$location',
-    function ($scope, homeService, $route, $location) {
+}]).controller('homePageController', ['$scope', 'homeService', '$route', '$location', 'localStorageModel', 'setTokenService',
+    function ($scope, homeService, $route, $location, localStorageModel, setTokenService) {
 
     let vm = this;
     vm.threePOIs = undefined;
     vm.poiInfo = undefined;
     vm.getPOIinformation = getPOIinformation;
+
+
+    checkLocalStorage();
     loadThreePOIs();
 
 
@@ -23,6 +26,16 @@ angular.module('appModule').service('homeService', ['$http', function($http){
 
             vm.threePOIs = response.data;
         })
+    }
+
+    function checkLocalStorage(){
+        let token = localStorageModel.get('token');
+        if (token){
+            setTokenService.set(token);
+            $scope.$parent.vm.username = localStorageModel.get('username');
+            $scope.$parent.vm.userConnected = true;
+            $location.path('/userHomePage');
+        }
     }
 
     function getPOIinformation(poi){

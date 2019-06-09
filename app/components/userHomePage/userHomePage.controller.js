@@ -10,8 +10,8 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         return $http.get(serverUrl + 'GetPOIInformation/' + data);
     };
 
-}]).controller('userHomePageController', ['$scope', 'userHomeService', '$route', '$location', 'localStorageModel', 'toastr',
-    function ($scope, userHomeService, $route, $location, localStorageModel, toastr) {
+}]).controller('userHomePageController', ['$scope', 'userHomeService', '$route', '$location', 'localStorageModel', 'toastr', 'setTokenService',
+    function ($scope, userHomeService, $route, $location, localStorageModel, toastr, setTokenService) {
 
         let vm = this;
         vm.userId = localStorageModel.get('userId');
@@ -23,6 +23,7 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         vm.userRecommendedPOIs = undefined;
         vm.getPOIinformation = getPOIinformation;
 
+        checkLocalStorage();
         loadSavedPOIs();
         loadRecommendedPOIs();
 
@@ -33,7 +34,7 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
                vm.importAllData = vm.importSavedPOIs && vm.importRecommendedPOIs;
 
             }, function (response) {
-                toastr.error('We recommend to save points of interest to favorite list by clicking on star button');
+                toastr.info('We recommend to save points of interest to favorite list by clicking on star button');
                 console.log(response);
 
             });
@@ -55,6 +56,17 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         function getPOIinformation(poi){
             $location.path('/POIinformation/' + poi['poiId']);
 
+        }
+
+        function checkLocalStorage(){
+            let token = localStorageModel.get('token');
+            if (token){
+                setTokenService.set(token);
+                $scope.$parent.vm.username = localStorageModel.get('username');
+                $scope.$parent.vm.userConnected = true;
+            }
+            else
+                $location.path('/');
         }
 
 
