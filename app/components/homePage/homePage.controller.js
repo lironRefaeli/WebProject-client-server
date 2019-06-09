@@ -17,18 +17,16 @@ angular.module('appModule').service('homeService', ['$http', function($http){
     loadThreePOIs();
 
 
+
     function loadThreePOIs(){
         homeService.threeRandomPOI().then(function (response){
+
             vm.threePOIs = response.data;
         })
     }
 
     function getPOIinformation(poi){
-        //homeService.getPOIinfo(poi['poiId']).then(function (response){
-        // vm.poiInfo = response.data;
-        //alert(vm.poiInfo[0][0]['poiName']);
-        $route.routes['/POIinformation'].poi = poi;
-        $location.path('/POIinformation');
+        $location.path('/POIinformation/' + poi['poiId']);
 
     }
 

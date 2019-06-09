@@ -1,4 +1,24 @@
-
-<div layout="row" flex layout-sm="column" layout-align="center center">
-    <h3>{{vm.poi[0][0]['poiName']}}</h3>
+<div layout="row">
+<div layout="column" style="width: 50%; margin-left: 3% " layout-align="start start">
+    <h3>{{vm.poiInfo[0][0]['poiName']}}</h3>
+    <img ng-src="metadata/POIpictures/{{vm.poiInfo[0][0]['poiPicture'] }}.jpg"
+    style="height: 70%; width: 70%">
 </div>
+<div layout="column" style="width: 50%; margin-right: 3%" layout-align="start start" >
+    <h4>description:</h4>
+    <p>{{vm.poiInfo[0][0]['poiDescription']}}</p>
+
+    <h4>People watched: {{vm.poiInfo[0][0]['numOfViews']}}</h4>
+
+    <h4>Rank: {{ vm.percentageRank }} %</h4>
+
+    <h4>Two Last Critics:</h4>
+    <p>Critic: {{vm.criticDate[0]}}, {{vm.poiInfo[1][0]['criticText']}} </p>
+    <br>
+    <p>Critic: {{vm.criticDate[1]}}, {{vm.poiInfo[1][1]['criticText']}}</p>
+
+
+</div>
+</div>
+
+

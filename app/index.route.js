@@ -20,7 +20,7 @@ app.config(['$locationProvider','toastrConfig', '$routeProvider', function ($loc
             templateUrl: 'components/users/passRetrieval.html',
             controller: 'usersController as vm'
         })
-        .when('/POIinformation',{
+        .when('/POIinformation/:id',{
             templateUrl: 'components/POI/POIinformation.html',
             controller: 'POIinformationController as vm'
         })
