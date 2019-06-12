@@ -22,10 +22,20 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         vm.userSavedPOIs = undefined;
         vm.userRecommendedPOIs = undefined;
         vm.getPOIinformation = getPOIinformation;
-
+        vm.isSaved = isSaved;
+        vm.addToFavorites = addToFavorites;
         checkLocalStorage();
         loadSavedPOIs();
         loadRecommendedPOIs();
+
+        function isSaved(poi){
+            return $scope.$parent.vm.existsInFavorites(poi.poiId);
+        }
+
+        function addToFavorites(poiId){
+            $scope.$parent.vm.addToFavorites(poiId);
+            isSaved(poi);
+        }
 
         function loadSavedPOIs() {
             userHomeService.getTwoLastSavedPOI(vm.userId).then( function (response){

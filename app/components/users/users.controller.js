@@ -21,6 +21,9 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
     this.getUserQuestions = function (data) {
         return $http.get(serverUrl + 'getUserQuestions/' + data)
     }
+    this.getSavedPOI = function (data) {
+        return $http.get(serverUrl + 'loggedIn/user/getUserSavedPOIs/' + data)
+    };
 
 }]).controller('usersController', ['toastr', '$location', '$scope', 'usersService', 'setTokenService', 'localStorageModel',
     function (toastr, $location, $scope, usersService, setTokenService, localStorageModel) {
@@ -53,19 +56,34 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
 
 
         function login() {
+
             usersService.login(vm.loginUser).then(function (response) {
                 toastr.success('login Succeeded');
                 setTokenService.set(response.data['token']);
                 localStorageModel.add('token', response.data['token']);
                 localStorageModel.add('userId', response.data['userID']);
                 localStorageModel.add('username', vm.loginUser.username);
+                importSavedPOIs();
                 $scope.$parent.vm.userConnected = true;
                 $scope.$parent.vm.username = localStorageModel.get('username');
-                $location.path('/userHomePage');
-
             }, function (response) {
                 toastr.error('Failed to login. Username or Password are incorrect');
                 console.log(response);
+            });
+
+        }
+
+        function importSavedPOIs(){
+            usersService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
+                toastr.success('getting saved POIs succeeded');
+                vm.userFavoritePOIs = response.data;
+
+                for(let i = 0; i < vm.userFavoritePOIs.length; i++){
+                    $scope.$parent.vm.addToFavorites(vm.userFavoritePOIs[i].poiId);
+                }
+                $location.path('/userHomePage');
+            },function () {
+                toastr.error('Could not bring user saved POIs');
             });
         }
 

@@ -47,11 +47,11 @@
                                 <h3>{{poi['poiName']}}</h3>
                             </md-card-content>
                             <md-card-actions layout="row" layout-align="end center">
-                                <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                                <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
                                     <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
                                 </md-button>
-                                <md-button class="md-icon-button" aria-label="Favorite">
-                                    <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                                <md-button ng-if="vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(poi.poiId)">
+                                    <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
                                 </md-button>
                             </md-card-actions>
                         </div>

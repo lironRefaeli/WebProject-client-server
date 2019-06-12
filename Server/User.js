@@ -60,7 +60,9 @@ router.post('/SavePOI', async function SavePOI (req, res)  {
         return;
     }
     try {
-        await DButilsAzure.execQuery('INSERT INTO [dbo].[UsersFavoritePOI] ([userId] ,[poiId] ,[poiOrder]) VALUES ('+ req.body.userId + ',' + req.body.poiId + ',' + req.body.poiOrder+ ')');
+        let lastPorder = await DButilsAzure.execQuery('SELECT MAX(poiOrder) FROM UsersFavoritePOI WHERE userId = ' + req.body.userId);
+        lastPorder++;
+        await DButilsAzure.execQuery('INSERT INTO [dbo].[UsersFavoritePOI] ([userId] ,[poiId] ,[poiOrder]) VALUES ('+ req.body.userId + ',' + req.body.poiId + ',' + lastPorder + ')');
         res.status(200).send({success: true, message: 'success - POI was saved'});
 
     }
@@ -115,7 +117,7 @@ router.get('/getUserSavedPOIs/:userID', async function GetUsersSavedPois(req, re
         const userPOIs = await DButilsAzure.execQuery('SELECT PointsOfInterests.poiId, poiName, poiPicture FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
             'ON UsersFavoritePOI.poiId = PointsOfInterests.poiId ' +
             'WHERE UsersFavoritePOI.userId = '  + req.params["userID"] +
-            ' ORDER BY poiOrder DESC');
+            ' ORDER BY poiOrder ASC');
         res.status(200).send(userPOIs);
     }
     catch(err){

@@ -32,6 +32,10 @@ app.config(['$locationProvider', 'toastrConfig', '$routeProvider', function ($lo
             templateUrl: 'components/POI/searchPOI.html',
             controller: 'searchPOIController as vm'
         })
+        .when('/favorites', {
+            templateUrl: 'components/POI/favoritesPOI.html',
+            controller: 'favoritesPOIController as vm'
+        })
         .otherwise({redirectTo: '/'});
 
     angular.extend(toastrConfig, {

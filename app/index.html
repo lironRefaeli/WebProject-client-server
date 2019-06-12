@@ -5,7 +5,7 @@
 <body ng-app="appModule" ng-controller="IndexController as vm" layout="column" >
 
 <header>
-    <md-toolbar style="background-color: green; font-family: Calibri">
+    <md-toolbar style="background-color: rebeccapurple; font-family: Calibri">
         <div class="md-toolbar-tools">
             <a href="#/home">
                 <md-button style="font-size: large"> Home </md-button>
@@ -25,12 +25,16 @@
             <a href="#/about">
                 <md-button style="font-size: large">About</md-button>
             </a>
+            <div ng-show="vm.userConnected" >
+                <a href="#/favorites">
+                <md-icon md-svg-src="metadata/icons/star-filled.svg"></md-icon>
+                </a>
+            </div>
             <span flex></span>
             <div ng-show="!vm.userConnected" >hello, guest</div>
             <div ng-show="vm.userConnected" >hello, {{vm.username}}</div>
 
         </div>
-
 
     </md-toolbar>
 
@@ -48,6 +52,7 @@
 <script src="components/POI/POIinformation.controller.js"></script>
 <script src="components/userHomePage/userHomePage.controller.js"></script>
 <script src="components/POI/searchPOI.controller.js"></script>
+<script src="components/POI/favoritesPOI.controller.js"></script>
 
 
 <!-- Angular Material Library -->
