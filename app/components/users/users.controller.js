@@ -151,7 +151,7 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
                 vm.userQuestionsAndAnswers = response.data;
                 vm.importUserQuestions = true;
             }, function (response) {
-                toastr.error('Failed to load data from server.');
+                toastr.error('The username does not exists');
                 console.log(response);
             });
         }

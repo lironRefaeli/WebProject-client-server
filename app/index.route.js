@@ -16,6 +16,9 @@ app.config(['$locationProvider', 'toastrConfig', '$routeProvider', function ($lo
             templateUrl: 'components/users/login.html',
             controller: 'usersController as vm'
         })
+        .when('/about', {
+            templateUrl: 'components/homePage/about.html',
+        })
         .when('/passRetrieval', {
             templateUrl: 'components/users/passRetrieval.html',
             controller: 'usersController as vm'

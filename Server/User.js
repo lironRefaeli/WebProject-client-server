@@ -34,8 +34,8 @@ router.get('/getTwoRecommendedPOI/:userID', async function GetRecommendedPOI(req
     }
     try {
         const chosenCategories = await DButilsAzure.execQuery('SELECT firstCategoryName ,secondCategoryName FROM Users WHERE userId = ' + req.params["userID"]);
-        const firstRecommendedPOI = await DButilsAzure.execQuery('SELECT poiId, poiName, poiPicture FROM PointsOfInterests WHERE rank =(SELECT MAX(rank) FROM PointsOfInterests WHERE PointsOfInterests.categoryName= '+ '\'' + chosenCategories[0]['firstCategoryName'] + '\')' );
-        const secondRecommendedPOI = await DButilsAzure.execQuery('SELECT [poiId] ,[poiName] ,[poiPicture] FROM [dbo].[PointsOfInterests] WHERE rank=(SELECT MAX(rank) FROM [dbo].[PointsOfInterests] WHERE [dbo].[PointsOfInterests].categoryName=' + '\'' + chosenCategories[0]['secondCategoryName'] + '\')' );
+        const firstRecommendedPOI = await DButilsAzure.execQuery('SELECT poiId, poiName, poiPicture FROM PointsOfInterests WHERE rank =(SELECT MAX(rank) FROM PointsOfInterests WHERE PointsOfInterests.categoryName= '+ '\'' + chosenCategories[0]['firstCategoryName'] + '\')' + 'AND categoryName = ' + '\'' + chosenCategories[0]['firstCategoryName'] + '\'');
+        const secondRecommendedPOI = await DButilsAzure.execQuery('SELECT [poiId] ,[poiName] ,[poiPicture] FROM [dbo].[PointsOfInterests] WHERE rank=(SELECT MAX(rank) FROM [dbo].[PointsOfInterests] WHERE [dbo].[PointsOfInterests].categoryName=' + '\'' + chosenCategories[0]['secondCategoryName'] + '\')' + 'AND categoryName = ' + '\'' + chosenCategories[0]['secondCategoryName'] + '\'');
         let RecommendedPOI = [];
         RecommendedPOI[0] = firstRecommendedPOI[0];
         RecommendedPOI[1] = secondRecommendedPOI[0];
