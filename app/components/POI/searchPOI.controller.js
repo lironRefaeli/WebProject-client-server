@@ -74,7 +74,7 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
             };
         searchPoiService.addToFavor.then( function(){
             toastr.success('Point of Interest was saved');
-        }, function (response) {
+        }, function () {
             toastr.error('Failed to load data from server.');
         });
     }

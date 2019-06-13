@@ -9,6 +9,12 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
     this.getPOIinfo = function (data) {
         return $http.get(serverUrl + 'GetPOIInformation/' + data);
     };
+    this.addToFavor = function (data) {
+        return $http.post(serverUrl + 'SavePOI', data);
+    };
+    this.removeFromFavor = function (data) {
+        return $http.post(serverUrl + 'DeleteSavedPOI', data);
+    };
 
 }]).controller('userHomePageController', ['$scope', 'userHomeService', '$route', '$location', 'localStorageModel', 'toastr', 'setTokenService',
     function ($scope, userHomeService, $route, $location, localStorageModel, toastr, setTokenService) {
@@ -24,6 +30,7 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         vm.getPOIinformation = getPOIinformation;
         vm.isSaved = isSaved;
         vm.addToFavorites = addToFavorites;
+        vm.removeFromFavorites = removeFromFavorites;
         checkLocalStorage();
         loadSavedPOIs();
         loadRecommendedPOIs();
@@ -33,8 +40,37 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         }
 
         function addToFavorites(poiId){
-            $scope.$parent.vm.addToFavorites(poiId);
-            isSaved(poi);
+            vm.dataToAddPOI =
+                {
+                    'userId' : vm.userId,
+                    'poiId' : poiId
+                };
+            userHomeService.addToFavor(vm.dataToAddPOI).then(function () {
+                toastr.success("Added new POI to your favorites!");
+                    loadSavedPOIs();
+                $scope.$parent.vm.addToFavorites(poiId);
+                isSaved(poi);
+            },function () {
+                toastr.error("Adding new favorite POI failed");
+            });
+
+        }
+
+        function removeFromFavorites(poiId){
+            vm.dataToRemovePOI =
+                {
+                    'userId' : vm.userId,
+                    'poiId' : poiId
+                };
+
+            userHomeService.removeFromFavor(vm.dataToRemovePOI).then(function () {
+                toastr.success("POI was deleted from your favorites");
+                    loadSavedPOIs();
+                $scope.$parent.vm.removeFromFavorites(poiId);
+                isSaved(poi);
+            },function () {
+                toastr.error("Deleting the POI from favorites failed");
+            });
         }
 
         function loadSavedPOIs() {
@@ -44,6 +80,7 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
                vm.importAllData = vm.importSavedPOIs && vm.importRecommendedPOIs;
 
             }, function (response) {
+                vm.importSavedPOIs = false;
                 toastr.info('We recommend to save points of interest to favorite list by clicking on star button');
                 console.log(response);
 

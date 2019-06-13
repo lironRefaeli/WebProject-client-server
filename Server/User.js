@@ -34,7 +34,7 @@ router.get('/getTwoRecommendedPOI/:userID', async function GetRecommendedPOI(req
     }
     try {
         const chosenCategories = await DButilsAzure.execQuery('SELECT firstCategoryName ,secondCategoryName FROM Users WHERE userId = ' + req.params["userID"]);
-        const firstRecommendedPOI = await DButilsAzure.execQuery('SELECT [poiId] ,[poiName] ,[poiPicture] FROM [dbo].[PointsOfInterests] WHERE rank=(SELECT MAX(rank) FROM [dbo].[PointsOfInterests] WHERE [dbo].[PointsOfInterests].categoryName= '+ '\'' + chosenCategories[0]['firstCategoryName'] + '\')' );
+        const firstRecommendedPOI = await DButilsAzure.execQuery('SELECT poiId, poiName, poiPicture FROM PointsOfInterests WHERE rank =(SELECT MAX(rank) FROM PointsOfInterests WHERE PointsOfInterests.categoryName= '+ '\'' + chosenCategories[0]['firstCategoryName'] + '\')' );
         const secondRecommendedPOI = await DButilsAzure.execQuery('SELECT [poiId] ,[poiName] ,[poiPicture] FROM [dbo].[PointsOfInterests] WHERE rank=(SELECT MAX(rank) FROM [dbo].[PointsOfInterests] WHERE [dbo].[PointsOfInterests].categoryName=' + '\'' + chosenCategories[0]['secondCategoryName'] + '\')' );
         let RecommendedPOI = [];
         RecommendedPOI[0] = firstRecommendedPOI[0];
@@ -52,7 +52,6 @@ router.get('/getTwoRecommendedPOI/:userID', async function GetRecommendedPOI(req
 
 });
 
-
 router.post('/SavePOI', async function SavePOI (req, res)  {
     const {error} = validateSavePoi(req.body);
     if(error){
@@ -60,11 +59,15 @@ router.post('/SavePOI', async function SavePOI (req, res)  {
         return;
     }
     try {
-        let lastPorder = await DButilsAzure.execQuery('SELECT MAX(poiOrder) FROM UsersFavoritePOI WHERE userId = ' + req.body.userId);
-        lastPorder++;
-        await DButilsAzure.execQuery('INSERT INTO [dbo].[UsersFavoritePOI] ([userId] ,[poiId] ,[poiOrder]) VALUES ('+ req.body.userId + ',' + req.body.poiId + ',' + lastPorder + ')');
+        let lastOrder = await DButilsAzure.execQuery('SELECT MAX(poiOrder) FROM UsersFavoritePOI WHERE userId = ' + req.body.userId);
+        let currOrder;
+        console.log(lastOrder[0]['']);
+        if(lastOrder[0][''] === null)
+            currOrder = 1;
+        else
+            currOrder = lastOrder[0][''] + 1;
+        await DButilsAzure.execQuery('INSERT INTO [dbo].[UsersFavoritePOI] ([userId] ,[poiId] ,[poiOrder]) VALUES ('+ req.body.userId + ',' + req.body.poiId + ',' + currOrder + ')');
         res.status(200).send({success: true, message: 'success - POI was saved'});
-
     }
     catch(err){
         res.status(404).send({success: false, message: 'something went wrong in the DB'});
@@ -75,20 +78,19 @@ function validateSavePoi(body){
     const schema = {
         userId: Joi.number().required(),
         poiId: Joi.number().required(),
-        poiOrder: Joi.number().required()
     };
     return Joi.validate(body, schema);
 }
 
 
-router.delete('/DeleteSavedPOI', async function DeleteSavedPOI (req, res)  {
+router.post('/DeleteSavedPOI', async function DeleteSavedPOI (req, res)  {
     const {error} = validateDeleteSavedPOI(req.body);
     if(error){
         res.status(400).send(error.details[0].message);
         return;
     }
     try {
-        await DButilsAzure.execQuery('DELETE FROM [dbo].[UsersFavoritePOI] WHERE userId=' + '\'' + req.body.userId + '\'' + ' AND poiId=' + '\'' + req.body.poiId + '\'');
+        await DButilsAzure.execQuery('DELETE FROM [dbo].[UsersFavoritePOI] WHERE userId = ' + '\'' + req.body.userId + '\'' + ' AND poiId =' + '\'' + req.body.poiId + '\'');
         res.status(200).send({success: true, message: 'success'});
     }
     catch(err){
@@ -98,8 +100,8 @@ router.delete('/DeleteSavedPOI', async function DeleteSavedPOI (req, res)  {
 
 function validateDeleteSavedPOI(body){
     const schema = {
-        userId: Joi.string().required(),
-        poiId: Joi.string().required()
+        userId: Joi.number().required(),
+        poiId: Joi.number().required()
     };
     return Joi.validate(body, schema);
 }

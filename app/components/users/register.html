@@ -50,7 +50,7 @@
                     <md-input-container class="md-icon-float md-block">
                         <label>City</label>
                         <input ng-model="vm.user.city" name="city" type="text"
-                               required ng-pattern="/^[a-zA-Z]*$/">
+                               required ng-pattern="/^[a-zA-Z ]*$/">
                         <span ng-show="form.city.$error.required">
                             Required</span>
                         <span ng-show="form.city.$error.pattern">
