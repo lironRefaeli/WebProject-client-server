@@ -56,6 +56,8 @@
 
 <div ng-if="vm.filteredName && !vm.filteredCategory && !vm.filteredRank">
     <md-grid-list md-cols="3" md-gutter="4em" md-row-height="2:2">
+        <h3 style="text-align: center" ng-if="vm.pois.length === 0"> Could not find any Point Of Interest that its name
+            contains {{vm.text}}</h3>
         <md-grid-tile ng-repeat="poi in vm.pois">
             <md-card style="height: 350px; width: 350px">
                 <div layout="row" layout-align="space-around center" flex>
