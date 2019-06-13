@@ -52,11 +52,9 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
                 'poiId' : poiId
             };
         searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
-            toastr.success("Added new POI to your favorites!");
+            toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
             $scope.$parent.vm.addToFavorites(poiId);
-            isSaved(poi);
-        },function () {
-            toastr.error("Adding new favorite POI failed");
+            //isSaved(poi);
         });
 
     }
@@ -69,11 +67,8 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
             };
 
         searchPoiService.removeFromFavor(vm.dataToRemovePOI).then(function () {
-            toastr.success("POI was deleted from your favorites");
             $scope.$parent.vm.removeFromFavorites(poiId);
-            isSaved(poi);
-        },function () {
-            toastr.error("Deleting the POI from favorites failed");
+            //isSaved(poi);
         });
     }
 

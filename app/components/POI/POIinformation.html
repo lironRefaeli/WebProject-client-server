@@ -1,24 +1,83 @@
 <div layout="row">
-<div layout="column" style="width: 50%; margin-left: 3% " layout-align="start start">
-    <h3>{{vm.poiInfo[0][0]['poiName']}}</h3>
-    <img ng-src="metadata/POIpictures/{{vm.poiInfo[0][0]['poiPicture'] }}.jpg"
-    style="height: 70%; width: 70%">
+    <div layout="column" style="width: 50%; margin-left: 3% " layout-align="start center">
+        <h3>{{vm.poiInfo[0][0]['poiName']}}</h3>
+        <img ng-src="metadata/POIpictures/{{vm.poiInfo[0][0]['poiPicture'] }}.jpg"
+             style="height: 70%; width: 70%">
+        <div layout="row" layout-align="space-around center" flex>
+            <md-card-content>
+                <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button ng-if="!vm.isSaved(vm.poiId)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(vm.poiId)">
+                    <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                </md-button>
+                <md-button ng-if="vm.isSaved(vm.poiId)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(vm.poiId)">
+                    <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
+                </md-button>
+            </md-card-actions>
+        </div>
+    </div>
+    <div layout="column" style="width: 50%; margin-right: 3%" layout-align="start start">
+        <h4>Description:</h4>
+        <p>{{vm.poiInfo[0][0]['poiDescription']}}</p>
+
+        <h4>People watched: {{vm.poiInfo[0][0]['numOfViews']}}</h4>
+
+        <h4>Rank: {{ vm.percentageRank }} %</h4>
+
+
+        <h4>Two Last Critics:</h4>
+        <div ng-if="vm.loadFirstCritic">
+            <p ><h4>Critic:</h4> {{vm.criticDate[0]}}, {{vm.poiInfo[1][0]['criticText']}} </p>
+        </div>
+        <br>
+        <div ng-if="vm.loadSecondCritic">
+            <p ng-if="vm.loadSecondCritic"><h4>Critic:</h4> {{vm.criticDate[1]}}, {{vm.poiInfo[1][1]['criticText']}}</p>
+        </div>
+        <br>
+        <br>
+        <div class="container">
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Enter Ctitic
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Write Critic About: {{vm.poiInfo[0][0]['poiName']}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <md-input-container>
+                                <label>Rate:</label>
+                                <input ng-model="vm.critic.rate" name="criticRate" type="text"  ng-pattern="/^[0-9]*$/"
+                                       required min="1" max="5">
+                                <span ng-show="form.criticRate.$error.required">
+                            Required</span>
+                                <span ng-show="form.criticRate.$error.pattern">
+                            numbers only</span>
+                            </md-input-container>
+                            <br>
+                            <br>
+                            <md-input-container>
+                                <label>Write Critic:</label>
+                                <input ng-model="vm.critic.text" name="criticText" type="text"  style="width:400px"
+                                       required>
+                                <span ng-show="form.criticText.$error.required">
+                            Required</span>
+                            </md-input-container>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
-<div layout="column" style="width: 50%; margin-right: 3%" layout-align="start start" >
-    <h4>description:</h4>
-    <p>{{vm.poiInfo[0][0]['poiDescription']}}</p>
-
-    <h4>People watched: {{vm.poiInfo[0][0]['numOfViews']}}</h4>
-
-    <h4>Rank: {{ vm.percentageRank }} %</h4>
-
-    <h4>Two Last Critics:</h4>
-    <p>Critic: {{vm.criticDate[0]}}, {{vm.poiInfo[1][0]['criticText']}} </p>
-    <br>
-    <p>Critic: {{vm.criticDate[1]}}, {{vm.poiInfo[1][1]['criticText']}}</p>
-
-
-</div>
-</div>
-
-

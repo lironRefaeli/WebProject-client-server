@@ -16,6 +16,7 @@ angular.module('appModule').controller('IndexController', ['localStorageModel', 
         localStorageModel.deleteValue('token');
         localStorageModel.deleteValue('username');
         localStorageModel.deleteValue('userId');
+        localStorageModel.deleteValue('favoritePOIs');
         vm.savedPOIs = [];
         vm.username = undefined;
         vm.userConnected = false;
@@ -25,12 +26,23 @@ angular.module('appModule').controller('IndexController', ['localStorageModel', 
     }
 
     function addToFavorites(poiID){
-        vm.savedPOIs.push(poiID);
+        if(!existsInFavorites(poiID))
+            vm.savedPOIs.push(poiID);
+        if(!localStorageModel.get('favoritePOIs'))
+        {
+            localStorageModel.add('favoritePOIs', vm.savedPOIs);
+        }
+        else
+            localStorageModel.update('favoritePOIs',vm.savedPOIs);
     }
 
     function removeFromFavorites(poiID){
-        let index = vm.savedPOIs.indexOf(poiID);
-        vm.savedPOIs.splice(index,1);
+        if(existsInFavorites(poiID))
+        {
+            let index = vm.savedPOIs.indexOf(poiID);
+            vm.savedPOIs.splice(index,1);
+        }
+        localStorageModel.update('favoritePOIs',vm.savedPOIs);
     }
 
     function existsInFavorites(poiID){

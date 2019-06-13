@@ -11,12 +11,9 @@
                 <div layout="row" style="margin-top: 2%;">
                     <div ng-if="vm.importSavedPOIs" ng-repeat="poi in vm.userSavedPOIs">
                         <md-card style="height: 300px; width: 250px">
-                            <img ng-click="vm.getPOIinformation(poi)"
-                                 ng-src="metadata/POIpictures/{{poi['poiPicture'] }}.jpg"
-                                 class="md-card-image">
                             <div layout="row" layout-align="space-around center" flex>
                                 <md-card-content>
-                                    <h3>{{poi['poiName']}}</h3>
+                                    <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                                 </md-card-content>
                                 <md-card-actions layout="row" layout-align="end center">
                                     <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
@@ -27,6 +24,9 @@
                                     </md-button>
                                 </md-card-actions>
                             </div>
+                            <img ng-click="vm.getPOIinformation(poi)"
+                                 ng-src="metadata/POIpictures/{{poi['poiPicture'] }}.jpg"
+                                 class="md-card-image">
                         </md-card>
                     </div>
                 </div>
@@ -37,12 +37,9 @@
             <div layout="row" style="margin-top: 2%">
                 <div ng-repeat="poi in vm.userRecommendedPOIs">
                     <md-card style="height: 300px; width: 250px">
-                        <img ng-click="vm.getPOIinformation(poi)"
-                             ng-src="metadata/POIpictures/{{poi['poiPicture'] }}.jpg"
-                             class="md-card-image">
                         <div layout="row" layout-align="space-around center" flex>
                             <md-card-content>
-                                <h3>{{poi['poiName']}}</h3>
+                                <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                             </md-card-content>
                             <md-card-actions layout="row" layout-align="end center">
                                 <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
@@ -53,6 +50,9 @@
                                 </md-button>
                             </md-card-actions>
                         </div>
+                        <img ng-click="vm.getPOIinformation(poi)"
+                             ng-src="metadata/POIpictures/{{poi['poiPicture'] }}.jpg"
+                             class="md-card-image">
                     </md-card>
                 </div>
             </div>

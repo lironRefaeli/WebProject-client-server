@@ -19,7 +19,7 @@ router.get('/getTwoLastSavedPOI/:userID', async function GetTwoSavedPOI(req, res
         if (Object.keys(twoPoisArray).length === 2)
              res.status(200).send(twoPoisArray);
         else
-            res.status(404).send({message: 'Need at least 2 saved POIs in order to get them'});
+            res.status().send({message: 'Need at least 2 saved POIs in order to get them'});
     }
     catch(err){
         res.status(404).send({message: 'something went wrong'});

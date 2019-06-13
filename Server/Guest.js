@@ -245,30 +245,6 @@ router.get('/getPOIs', async function GetPOIs(req, res) {
 });
 
 
-/*
-router.get('/getPOIByPOIName/:POI_name', async function GetPOIs(req, res) {
-    const {error} = validatePOIName(req.params);
-    if(error) {
-        res.status(400).send(error.details[0].message);
-        return;
-    }
-    let poiNameWithoutSpace = req.params["POI_name"].split('_').join(' ');
-    try {
-        const poi = await DButilsAzure.execQuery('SELECT [poiId],[poiName],[poiPicture] FROM [dbo].[PointsOfInterests]  WHERE [dbo].[PointsOfInterests].poiName=' + '\'' +poiNameWithoutSpace+'\'' );
-
-        if (Object.keys(poi).length > 0 ) {
-            res.status(200).send(poi);
-        }
-        else
-            res.status(404).send({message: 'There is no poi with the chosen name in the DB'});
-    }
-    catch(err){
-        res.status(404).send({message: 'The connection to the DB failed'});
-    }
-
-});
-*/
-
 router.get('/GetPOIInformation/:POI_id', async function GetPOIs(req, res) {
     try {
         const poiInfo = await DButilsAzure.execQuery('SELECT [poiName],[poiPicture],[numOfViews],[rank],[poiDescription] FROM [dbo].[PointsOfInterests] where [poiId] =' +req.params["POI_id"]);

@@ -27,13 +27,17 @@
         </md-input-container>
     </div>
     <div layout="row" layout-align="center start">
-        <md-button class="md-raised md-primary" ng-click="vm.SaveUserOrder()">Save Order</md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.SaveUserOrder()" ng-disabled="vm.disableSaveButton">Save Order</md-button>
         <md-button class="md-raised md-primary" ng-click="vm.ChangeUserOrder()">Change Order</md-button>
     </div>
-    <br>
     <div ng-if="vm.changeOrder && !vm.saveOrder" layout="row" layout-align="center start">
-        <md-input-container style="width: 20%">
-            <label>place in order</label>
+        <md-input-container style="width: 30%" >
+            <h1 style="text-align: center; font-size: 20px">
+            example for 3 favorite POIs: 3,1,2.
+            This will put your number 1 POI at third place, your number 2 POI in first place and your
+            number 3 POI in second place.
+            please use numbers separated by commas.</h1>
+            <br>
             <input ng-model="vm.orderInput" type="text">
         </md-input-container>
     </div>
@@ -118,6 +122,7 @@
     <md-grid-list md-cols="3" md-gutter="4em" md-row-height="2:2">
 
         <md-grid-tile ng-repeat="poi in vm.pois">
+            <span style="font-size: x-large">{{$index + 1}}</span>
             <md-card style="height: 350px; width: 350px">
                 <div layout="row" layout-align="space-around center" flex>
                     <md-card-content>
