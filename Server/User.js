@@ -116,7 +116,7 @@ router.get('/getUserSavedPOIs/:userID', async function GetUsersSavedPois(req, re
         return;
     }
     try{
-        const userPOIs = await DButilsAzure.execQuery('SELECT PointsOfInterests.poiId, poiName, poiPicture FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
+        const userPOIs = await DButilsAzure.execQuery('SELECT PointsOfInterests.poiId, poiName, poiPicture, categoryName, rank FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
             'ON UsersFavoritePOI.poiId = PointsOfInterests.poiId ' +
             'WHERE UsersFavoritePOI.userId = '  + req.params["userID"] +
             ' ORDER BY poiOrder ASC');

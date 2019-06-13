@@ -15,6 +15,9 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
     this.removeFromFavor = function (data) {
         return $http.post(serverUrl + 'DeleteSavedPOI', data);
     };
+    this.getSavedPOI = function (data) {
+        return $http.get(serverUrl + 'getUserSavedPOIs/' + data)
+    };
 
 }]).controller('userHomePageController', ['$scope', 'userHomeService', '$route', '$location', 'localStorageModel', 'toastr', 'setTokenService',
     function ($scope, userHomeService, $route, $location, localStorageModel, toastr, setTokenService) {
@@ -108,12 +111,24 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         function checkLocalStorage(){
             let token = localStorageModel.get('token');
             if (token){
+                importSavedPOIs();
                 setTokenService.set(token);
                 $scope.$parent.vm.username = localStorageModel.get('username');
                 $scope.$parent.vm.userConnected = true;
             }
             else
                 $location.path('/');
+        }
+
+        function importSavedPOIs(){
+            userHomeService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
+                vm.userFavoritePOIs = response.data;
+
+                for(let i = 0; i < vm.userFavoritePOIs.length; i++){
+                    $scope.$parent.vm.addToFavorites(vm.userFavoritePOIs[i].poiId);
+                }
+                $location.path('/userHomePage');
+            });
         }
 
 

@@ -14,8 +14,6 @@ angular.module('appModule').service('homeService', ['$http', function($http){
     vm.threePOIs = undefined;
     vm.poiInfo = undefined;
     vm.getPOIinformation = getPOIinformation;
-
-
     checkLocalStorage();
     loadThreePOIs();
 
@@ -43,6 +41,5 @@ angular.module('appModule').service('homeService', ['$http', function($http){
 
     }
 
-
-}]);
+    }]);
 

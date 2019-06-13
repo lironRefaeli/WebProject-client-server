@@ -8,7 +8,6 @@
             <label>search point of interest by name:</label>
             <input ng-model="vm.text" ng-change="vm.filterByName()" type="text">
         </md-input-container>
-
         <md-input-container class="md-icon-float md-block" style="width: 20%">
             <label> filter by category: </label>
             <md-select ng-model="vm.chosenCategory" ng-change="vm.filterByCategory()">
@@ -45,21 +44,21 @@
     <md-grid-list md-cols="3" md-gutter="4em" md-row-height="2:2">
         <md-grid-tile ng-repeat="poi in vm.pois">
             <md-card style="height: 350px; width: 350px">
-                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
-                     class="md-card-image">
                 <div layout="row" layout-align="space-around center" flex>
                     <md-card-content>
-                        <h3>{{poi['poiName']}}</h3>
+                        <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                     </md-card-content>
                     <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                        <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
                             <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" aria-label="Favorite">
-                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        <md-button ng-if="vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(poi.poiId)">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
                         </md-button>
                     </md-card-actions>
                 </div>
+                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
+                     class="md-card-image">
             </md-card>
         </md-grid-tile>
     </md-grid-list>
@@ -69,21 +68,21 @@
     <md-grid-list md-cols="3" md-gutter="4em" md-row-height="2:2">
         <md-grid-tile ng-repeat="poi in vm.pois">
             <md-card style="height: 350px; width: 350px">
-                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
-                     class="md-card-image">
                 <div layout="row" layout-align="space-around center" flex>
                     <md-card-content>
-                        <h3>{{poi['poiName']}}</h3>
+                        <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                     </md-card-content>
                     <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                        <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
                             <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" aria-label="Favorite">
-                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        <md-button ng-if="vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(poi.poiId)">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
                         </md-button>
                     </md-card-actions>
                 </div>
+                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
+                     class="md-card-image">
             </md-card>
         </md-grid-tile>
     </md-grid-list>
@@ -93,21 +92,21 @@
     <md-grid-list md-cols="3" md-gutter="4em" md-row-height="2:2">
         <md-grid-tile ng-repeat="poi in vm.poisOfCategory">
             <md-card style="height: 350px; width: 350px">
-                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
-                     class="md-card-image">
                 <div layout="row" layout-align="space-around center" flex>
                     <md-card-content>
-                        <h3>{{poi['poiName']}}</h3>
+                        <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                     </md-card-content>
                     <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                        <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
                             <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" aria-label="Favorite">
-                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        <md-button ng-if="vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(poi.poiId)">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
                         </md-button>
                     </md-card-actions>
                 </div>
+                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
+                     class="md-card-image">
             </md-card>
         </md-grid-tile>
     </md-grid-list>
@@ -118,21 +117,21 @@
 
         <md-grid-tile ng-repeat="poi in vm.pois">
             <md-card style="height: 350px; width: 350px">
-                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
-                     class="md-card-image">
                 <div layout="row" layout-align="space-around center" flex>
                     <md-card-content>
-                        <h3>{{poi['poiName']}}</h3>
+                        <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                     </md-card-content>
                     <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                        <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
                             <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" aria-label="Favorite">
-                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        <md-button ng-if="vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(poi.poiId)">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
                         </md-button>
                     </md-card-actions>
                 </div>
+                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
+                     class="md-card-image">
             </md-card>
         </md-grid-tile>
     </md-grid-list>
@@ -143,21 +142,21 @@
         <md-grid-tile ng-repeat="poi in vm.pois">
             <span style="font-size: x-large">{{$index + 1}}</span>
             <md-card style="height: 350px; width: 350px">
-                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
-                     class="md-card-image">
                 <div layout="row" layout-align="space-around center" flex>
                     <md-card-content>
-                        <h3>{{poi['poiName']}}</h3>
+                        <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
                     </md-card-content>
                     <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-if="" class="md-icon-button" aria-label="Favorite">
+                        <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
                             <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" aria-label="Favorite">
-                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                        <md-button ng-if="vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(poi.poiId)">
+                            <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
                         </md-button>
                     </md-card-actions>
                 </div>
+                <img ng-click="vm.getPOIinformation(poi)" ng-src="metadata/POIpictures/{{poi['poiPicture']}}.jpg"
+                     class="md-card-image">
             </md-card>
         </md-grid-tile>
     </md-grid-list>

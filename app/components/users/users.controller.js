@@ -75,15 +75,11 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
 
         function importSavedPOIs(){
             usersService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
-                toastr.success('getting saved POIs succeeded');
                 vm.userFavoritePOIs = response.data;
-
                 for(let i = 0; i < vm.userFavoritePOIs.length; i++){
                     $scope.$parent.vm.addToFavorites(vm.userFavoritePOIs[i].poiId);
                 }
                 $location.path('/userHomePage');
-            },function () {
-                toastr.error('Could not bring user saved POIs');
             });
         }
 

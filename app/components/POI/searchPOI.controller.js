@@ -10,10 +10,13 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     this.addToFavor = function (data) {
         return $http.post(serverUrl + 'loggedIn/user/SavePOI', data);
     };
+    this.removeFromFavor = function (data) {
+        return $http.post(serverUrl + 'loggedIn/user/DeleteSavedPOI', data);
+    };
 
 
-}]).controller('searchPOIController', ['searchPoiService', '$location', 'toastr', 'localStorageModel','setTokenService',
-    function (searchPoiService, $location, toastr, localStorageModel, setTokenService) {
+}]).controller('searchPOIController', ['searchPoiService', '$location', 'toastr', 'localStorageModel','setTokenService', '$scope',
+    function (searchPoiService, $location, toastr, localStorageModel, setTokenService, $scope) {
 
     let vm = this;
     vm.pois = undefined;
@@ -28,13 +31,51 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filteredName = false;
     vm.tempArray = [];
     vm.userId = localStorageModel.get('userId');
-    vm.AddToFavorites = AddToFavorites;
+    vm.isSaved = isSaved;
+    vm.addToFavorites = addToFavorites;
+    vm.removeFromFavorites = removeFromFavorites;
     vm.getPOIinformation = getPOIinformation;
     vm.filterByCategory = filterByCategory;
     vm.filterByRank = filterByRank;
     vm.filterByName = filterByName;
     loadPois();
     loadCategories();
+
+    function isSaved(poi){
+        return $scope.$parent.vm.existsInFavorites(poi.poiId);
+    }
+
+    function addToFavorites(poiId){
+        vm.dataToAddPOI =
+            {
+                'userId' : vm.userId,
+                'poiId' : poiId
+            };
+        searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
+            toastr.success("Added new POI to your favorites!");
+            $scope.$parent.vm.addToFavorites(poiId);
+            isSaved(poi);
+        },function () {
+            toastr.error("Adding new favorite POI failed");
+        });
+
+    }
+
+    function removeFromFavorites(poiId){
+        vm.dataToRemovePOI =
+            {
+                'userId' : vm.userId,
+                'poiId' : poiId
+            };
+
+        searchPoiService.removeFromFavor(vm.dataToRemovePOI).then(function () {
+            toastr.success("POI was deleted from your favorites");
+            $scope.$parent.vm.removeFromFavorites(poiId);
+            isSaved(poi);
+        },function () {
+            toastr.error("Deleting the POI from favorites failed");
+        });
+    }
 
     function loadPois()
     {
@@ -65,19 +106,6 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
 
     }
 
-    function AddToFavorites(poi){
-        poi.saved = true;
-        vm.addData =
-            {
-                'userId' : vm.userId,
-                'poiId' : poi.poiId
-            };
-        searchPoiService.addToFavor.then( function(){
-            toastr.success('Point of Interest was saved');
-        }, function () {
-            toastr.error('Failed to load data from server.');
-        });
-    }
 
     function filterByName(){
         vm.pois = vm.AllPOIs;
@@ -100,19 +128,27 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     }
 
     function filterByCategory(){
-        vm.pois = vm.AllPOIs;
-        vm.poisOfCategory = [];
-        let counter = 0;
-        for(let i = 0; i < vm.pois.length; i++) {
-            if(vm.chosenCategory === vm.pois[i].categoryName) {
-                vm.poisOfCategory[counter] = vm.pois[i];
-                counter++;
-            }
+        if(vm.chosenCategory === undefined)
+        {
+            vm.filteredCategory = false;
+            vm.filteredName = false;
+            vm.filteredRank = false;
         }
-        vm.filteredCategory = true;
-        vm.filteredName = false;
-        vm.filteredRank = false;
-
+        else
+        {
+            vm.pois = vm.AllPOIs;
+            vm.poisOfCategory = [];
+            let counter = 0;
+            for(let i = 0; i < vm.pois.length; i++) {
+                if(vm.chosenCategory === vm.pois[i].categoryName) {
+                    vm.poisOfCategory[counter] = vm.pois[i];
+                    counter++;
+                }
+            }
+            vm.filteredCategory = true;
+            vm.filteredName = false;
+            vm.filteredRank = false;
+        }
     }
 
     function filterByRank(){

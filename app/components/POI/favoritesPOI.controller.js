@@ -10,6 +10,12 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
     this.saveNewOrder = function (data) {
         return $http.put(serverUrl + 'loggedIn/user/changeOrderOfSavedPOIs', data)
     };
+    this.addToFavor = function (data) {
+        return $http.post(serverUrl + 'loggedIn/user/SavePOI', data);
+    };
+    this.removeFromFavor = function (data) {
+        return $http.post(serverUrl + 'loggedIn/user/DeleteSavedPOI', data);
+    };
 
 
 }]).controller('favoritesPOIController', ['$scope','favoritesPOIService', '$location', 'toastr', 'localStorageModel','setTokenService',
@@ -36,9 +42,50 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
         vm.filterByName = filterByName;
         vm.SaveUserOrder = SaveUserOrder;
         vm.ChangeUserOrder = ChangeUserOrder;
+        vm.isSaved = isSaved;
+        vm.addToFavorites = addToFavorites;
+        vm.removeFromFavorites = removeFromFavorites;
         checkLocalStorage();
         loadUserPois();
         loadCategories();
+
+        function isSaved(poi){
+            return $scope.$parent.vm.existsInFavorites(poi.poiId);
+        }
+
+        function addToFavorites(poiId){
+            vm.dataToAddPOI =
+                {
+                    'userId' : vm.userId,
+                    'poiId' : poiId
+                };
+            favoritesPOIService.addToFavor(vm.dataToAddPOI).then(function () {
+                toastr.success("Added new POI to your favorites!");
+                loadUserPois();
+                $scope.$parent.vm.addToFavorites(poiId);
+                isSaved(poi);
+            },function () {
+                toastr.error("Adding new favorite POI failed");
+            });
+
+        }
+
+        function removeFromFavorites(poiId){
+            vm.dataToRemovePOI =
+                {
+                    'userId' : vm.userId,
+                    'poiId' : poiId
+                };
+
+            favoritesPOIService.removeFromFavor(vm.dataToRemovePOI).then(function () {
+                toastr.success("POI was deleted from your favorites");
+                loadUserPois()
+                $scope.$parent.vm.removeFromFavorites(poiId);
+                isSaved(poi);
+            },function () {
+                toastr.error("Deleting the POI from favorites failed");
+            });
+        }
 
 
         function checkLocalStorage(){
@@ -90,7 +137,6 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
             vm.filteredRank = false;
         }
 
-
         function loadUserPois()
         {
             favoritesPOIService.getSavedPOI(vm.userId).then( function (response){
@@ -141,24 +187,32 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
         }
 
         function filterByCategory(){
-            vm.pois = vm.AllPOIs;
-            vm.poisOfCategory = [];
-            let counter = 0;
-            for(let i = 0; i < vm.pois.length; i++) {
-                if(vm.chosenCategory === vm.pois[i].categoryName) {
-                    vm.poisOfCategory[counter] = vm.pois[i];
-                    counter++;
-                }
+            if(vm.chosenCategory === undefined)
+            {
+                vm.filteredCategory = false;
+                vm.filteredName = false;
+                vm.filteredRank = false;
             }
-            vm.filteredCategory = true;
-            vm.filteredName = false;
-            vm.filteredRank = false;
-
+            else
+            {
+                vm.pois = vm.AllPOIs;
+                vm.poisOfCategory = [];
+                let counter = 0;
+                for(let i = 0; i < vm.pois.length; i++) {
+                    if(vm.chosenCategory === vm.pois[i].categoryName) {
+                        vm.poisOfCategory[counter] = vm.pois[i];
+                        counter++;
+                    }
+                }
+                vm.filteredCategory = true;
+                vm.filteredName = false;
+                vm.filteredRank = false;
+            }
         }
 
         function filterByRank(){
             if(vm.rank === undefined || vm.rank === false){
-                loadPois();
+                loadUserPois();
                 vm.filteredName = false;
                 vm.filteredCategory = false;
             }
