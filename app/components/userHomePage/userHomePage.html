@@ -1,10 +1,10 @@
 <div layout="column">
-    <h1 layout="row" layout-align="center start"> Welcome {{vm.username}}! </h1>
-
+    <h1 layout="row" layout-align="center start"> <b>Welcome, {{vm.username}}!</b></h1>
+    <br>
     <div layout="column">
-        <div layout="row">
-            <h2 style="margin-left: 10%">Two Saved Points Of Interests</h2>
-            <h2 style="margin-left: 20%">Two Recommended Points Of Interests</h2>
+        <div layout="row" layout-align="space-around start">
+            <h2 style="font-size: 24px">{{vm.username}}'s saved points Of interests:</h2>
+            <h2 style="font-size: 24px">recommended points of interests:</h2>
         </div>
         <div layout="row" layout-align="space-around center">
             <div layout-align="start center">
@@ -13,7 +13,7 @@
                         <md-card style="height: 300px; width: 250px">
                             <div layout="row" layout-align="space-around center" flex>
                                 <md-card-content>
-                                    <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
+                                    <h3 ng-click="vm.getPOIinformation(poi)" style="font-size: 18px">{{poi['poiName']}}</h3>
                                 </md-card-content>
                                 <md-card-actions layout="row" layout-align="end center">
                                     <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">
@@ -39,7 +39,7 @@
                     <md-card style="height: 300px; width: 250px">
                         <div layout="row" layout-align="space-around center" flex>
                             <md-card-content>
-                                <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
+                                <h3 ng-click="vm.getPOIinformation(poi)" style="font-size: 18px">{{poi['poiName']}}</h3>
                             </md-card-content>
                             <md-card-actions layout="row" layout-align="end center">
                                 <md-button ng-if="!vm.isSaved(poi)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(poi.poiId)">

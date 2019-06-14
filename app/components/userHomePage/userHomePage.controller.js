@@ -52,7 +52,6 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
                 toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
                 loadSavedPOIs();
                 $scope.$parent.vm.addToFavorites(poiId);
-                //isSaved(poi);
             });
 
         }
@@ -67,21 +66,21 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
             userHomeService.removeFromFavor(vm.dataToRemovePOI).then(function () {
                 loadSavedPOIs();
                 $scope.$parent.vm.removeFromFavorites(poiId);
-                //isSaved(poi);
             });
         }
 
         function loadSavedPOIs() {
             userHomeService.getTwoLastSavedPOI(vm.userId).then( function (response){
                vm.userSavedPOIs = response.data;
-               vm.importSavedPOIs = true;
-               vm.importAllData = vm.importSavedPOIs && vm.importRecommendedPOIs;
-
+               if(vm.userSavedPOIs.length < 2){
+                   vm.importSavedPOIs = false;
+                   toastr.info('We recommend to save points of interest to favorite list by clicking on star button');
+               }
+               else{
+                   vm.importSavedPOIs = true;
+                   vm.importAllData = vm.importSavedPOIs && vm.importRecommendedPOIs;
+               }
             }, function (response) {
-                vm.importSavedPOIs = false;
-                toastr.info('We recommend to save points of interest to favorite list by clicking on star button');
-                console.log(response);
-
             });
         }
 

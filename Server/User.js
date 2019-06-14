@@ -16,10 +16,10 @@ router.get('/getTwoLastSavedPOI/:userID', async function GetTwoSavedPOI(req, res
             'FROM UsersFavoritePOI INNER JOIN PointsOfInterests ' +
             'ON UsersFavoritePOI.poiId = PointsOfInterests.poiId ' +
             'WHERE UsersFavoritePOI.userId = ' +  '\'' + req.params.userID + '\'' + ' ORDER BY updatedTime DESC');
-        if (Object.keys(twoPoisArray).length === 2)
+        if (Object.keys(twoPoisArray).length >= 0)
              res.status(200).send(twoPoisArray);
         else
-            res.status().send({message: 'Need at least 2 saved POIs in order to get them'});
+            res.status(400).send({message: 'Need at least 2 saved POIs in order to get them'});
     }
     catch(err){
         res.status(404).send({message: 'something went wrong'});
