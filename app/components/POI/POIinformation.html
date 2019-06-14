@@ -1,8 +1,21 @@
 <div layout="row">
-    <div layout="column" style="width: 50%; margin-left: 3% " layout-align="start start">
+    <div layout="column" style="width: 50%; margin-left: 3% " layout-align="start center">
         <h3>{{vm.poiInfo[0][0]['poiName']}}</h3>
         <img ng-src="metadata/POIpictures/{{vm.poiInfo[0][0]['poiPicture'] }}.jpg"
              style="height: 70%; width: 70%">
+        <div layout="row" layout-align="space-around center" flex>
+            <md-card-content>
+                <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button ng-if="!vm.isSaved(vm.poiId)" class="md-icon-button" aria-label="Favorite" ng-click="vm.addToFavorites(vm.poiId)">
+                    <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-empty.svg"></md-icon>
+                </md-button>
+                <md-button ng-if="vm.isSaved(vm.poiId)" class="md-icon-button" aria-label="Favorite" ng-click="vm.removeFromFavorites(vm.poiId)">
+                    <md-icon name="favorite_icon" md-svg-icon="metadata/icons/star-filled.svg"></md-icon>
+                </md-button>
+            </md-card-actions>
+        </div>
     </div>
     <div layout="column" style="width: 50%; margin-right: 3%" layout-align="start start">
         <h4>Description:</h4>
@@ -13,16 +26,17 @@
         <h4>Rank: {{ vm.percentageRank }} %</h4>
 
 
-            <h4>Two Last Critics:</h4>
+        <h4>Two Last Critics:</h4>
         <div ng-if="vm.loadFirstCritic">
             <p ><h4>Critic:</h4> {{vm.criticDate[0]}}, {{vm.poiInfo[1][0]['criticText']}} </p>
         </div>
-            <br>
+        <br>
         <div ng-if="vm.loadSecondCritic">
             <p ng-if="vm.loadSecondCritic"><h4>Critic:</h4> {{vm.criticDate[1]}}, {{vm.poiInfo[1][1]['criticText']}}</p>
-    </div>
+        </div>
         <br>
         <br>
+
         <div class="container">
             <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Enter Ctitic
             </button>
@@ -35,29 +49,28 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">Write Critic About: {{vm.poiInfo[0][0]['poiName']}}</h4>
                         </div>
-                        <div class="modal-body">
-                            <md-input-container>
-                            <label>Rate:</label>
-                            <input ng-model="vm.critic.rate" name="criticRate" type="text"  ng-pattern="/^[0-9]*$/"
-                                   required min="1" max="5">
-                            <span ng-show="form.criticRate.$error.required">
-                            Required</span>
-                            <span ng-show="form.criticRate.$error.pattern">
-                            numbers only</span>
+                        <div class="modal-body" layout="column" layout-align="center center">
+                        <form name="modalForm">
+                            <md-input-container >
+                                <label>Rate:</label>
+                                <input ng-model="vm.rank" name="criticRate" type="text"  ng-pattern="/^[0-9]*$/" required min="1" max="5">
+                                <span ng-show="modalForm.criticRate.$error.required">Please enter rank between 1 to 5</span>
+                                <span ng-show="modalForm.criticRate.$error.pattern">numbers only</span>
                             </md-input-container>
                             <br>
                             <br>
                             <md-input-container>
-                            <label>Write Critic:</label>
-                            <input ng-model="vm.critic.text" name="criticText" type="text"  style="width:400px"
-                                   required>
-                            <span ng-show="form.criticText.$error.required">
-                            Required</span>
+                                <label>Write Critic:</label>
+                                <input ng-model="vm.criticText" name="criticText" type="text"  style="width:400px"
+                                       required>
+                                <br>
+                                <span ng-show="modalForm.criticText.$error.required">
+                            Please write your opinion</span>
                             </md-input-container>
+                        </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+                            <md-button class="btn btn-default" ng-disabled="modalForm.$invalid" ng-click="vm.saveCritic()" data-dismiss="modal">send</md-button>
                         </div>
                     </div>
 
@@ -68,5 +81,3 @@
 
     </div>
 </div>
-
-

@@ -1,10 +1,12 @@
 
 <div layout="column">
     <h3 layout="row" layout-align="center start"
-        style="font-family: 'Calibri'; margin:1% 0 0 0; font-size: 56px;">
-        Welcome to Paris Info Page
+        style="margin:1% 0 0 0; font-size: 56px;">
+        <b>Discover Paris Best Places</b>
     </h3>
-    <p style="font-family: 'Calibri'; font-size: 24px; text-align: center"> If you are not registered yet, please click on the 'register' button above,
+    <br>
+    <br>
+    <p style="font-size: 24px; text-align: center"> If you are not registered yet, please click on the 'register' button above,
         or login to get the full experience.
     </p>
 </div>
@@ -14,7 +16,7 @@
         <md-card style="height: 350px; width: 350px">
             <div layout="row" layout-align="space-around center" flex>
                 <md-card-content>
-                    <h3 ng-click="vm.getPOIinformation(poi)">{{poi['poiName']}}</h3>
+                    <h3 ng-click="vm.getPOIinformation(poi)" style="font-size: 18px">{{poi['poiName']}}</h3>
                 </md-card-content>
                 <md-card-actions layout="row" layout-align="end center">
                     <md-button ng-if="" class="md-icon-button" aria-label="Favorite">

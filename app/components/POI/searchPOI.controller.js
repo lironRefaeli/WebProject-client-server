@@ -31,6 +31,7 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filteredName = false;
     vm.tempArray = [];
     vm.userId = localStorageModel.get('userId');
+    vm.isUserConnected = $scope.$parent.vm.userConnected;
     vm.isSaved = isSaved;
     vm.addToFavorites = addToFavorites;
     vm.removeFromFavorites = removeFromFavorites;
@@ -38,27 +39,39 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filterByCategory = filterByCategory;
     vm.filterByRank = filterByRank;
     vm.filterByName = filterByName;
+    checkLocalStorage()
     loadPois();
     loadCategories();
 
-    function isSaved(poi){
+
+        function checkLocalStorage(){
+            let token = localStorageModel.get('token');
+            if (token){
+                setTokenService.set(token);
+                $scope.$parent.vm.username = localStorageModel.get('username');
+                $scope.$parent.vm.userConnected = true;
+                $location.path('/points_of_interests');
+            }
+        }
+
+
+        function isSaved(poi){
         return $scope.$parent.vm.existsInFavorites(poi.poiId);
     }
 
     function addToFavorites(poiId){
-        vm.dataToAddPOI =
-            {
-                'userId' : vm.userId,
-                'poiId' : poiId
-            };
-        searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
-            toastr.success("Added new POI to your favorites!");
-            $scope.$parent.vm.addToFavorites(poiId);
-            isSaved(poi);
-        },function () {
-            toastr.error("Adding new favorite POI failed");
-        });
-
+        if(vm.isUserConnected)
+        {
+            vm.dataToAddPOI =
+                {
+                    'userId' : vm.userId,
+                    'poiId' : poiId
+                };
+            searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
+                toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
+                $scope.$parent.vm.addToFavorites(poiId);
+            });
+        }
     }
 
     function removeFromFavorites(poiId){
@@ -69,11 +82,8 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
             };
 
         searchPoiService.removeFromFavor(vm.dataToRemovePOI).then(function () {
-            toastr.success("POI was deleted from your favorites");
             $scope.$parent.vm.removeFromFavorites(poiId);
-            isSaved(poi);
-        },function () {
-            toastr.error("Deleting the POI from favorites failed");
+            //isSaved(poi);
         });
     }
 

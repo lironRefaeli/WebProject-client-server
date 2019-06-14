@@ -1,4 +1,4 @@
-let app = angular.module('appModule', ['toastr', "ngRoute", 'ngMaterial', 'ngAnimate', 'LocalStorageModule'])
+let app = angular.module('appModule', ['toastr', "ngRoute", 'ngMaterial', 'ngAnimate', 'LocalStorageModule','star-rating'])
 app.config(['$locationProvider', 'toastrConfig', '$routeProvider', function ($locationProvider, toastrConfig, $routeProvider) {
 
     $locationProvider.hashPrefix('');
@@ -18,6 +18,7 @@ app.config(['$locationProvider', 'toastrConfig', '$routeProvider', function ($lo
         })
         .when('/about', {
             templateUrl: 'components/homePage/about.html',
+            controller: 'aboutController as vm'
         })
         .when('/passRetrieval', {
             templateUrl: 'components/users/passRetrieval.html',

@@ -34,6 +34,7 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
         vm.filteredName = false;
         vm.cnageOrder = false;
         vm.saveOrder = false;
+        vm.disableSaveButton = true;
         vm.tempArray = [];
         vm.userId = localStorageModel.get('userId');
         vm.getPOIinformation = getPOIinformation;
@@ -63,7 +64,7 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
                 toastr.success("Added new POI to your favorites!");
                 loadUserPois();
                 $scope.$parent.vm.addToFavorites(poiId);
-                isSaved(poi);
+                //(poi);
             },function () {
                 toastr.error("Adding new favorite POI failed");
             });
@@ -78,12 +79,9 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
                 };
 
             favoritesPOIService.removeFromFavor(vm.dataToRemovePOI).then(function () {
-                toastr.success("POI was deleted from your favorites");
-                loadUserPois()
+                loadUserPois();
                 $scope.$parent.vm.removeFromFavorites(poiId);
-                isSaved(poi);
-            },function () {
-                toastr.error("Deleting the POI from favorites failed");
+                //isSaved(poi);
             });
         }
 
@@ -103,33 +101,56 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
         function SaveUserOrder()
         {
             vm.saveOrder = true;
+            vm.disableSaveButton = true;
             vm.order = [];
             vm.order = vm.orderInput.split(',');
-            vm.orderObject = [];
-            vm.newOrderData =
+            vm.validation = [];
+            vm.isValid = true;
+            if(vm.order.length !== $scope.$parent.vm.savedPOIs.length)
+                vm.isValid = false;
+            for(let i = 0; i < $scope.$parent.vm.savedPOIs.length; i++)
+            {
+                if(vm.validation.includes(vm.order[i]) || vm.order[i] > $scope.$parent.vm.savedPOIs.length)
                 {
-                    'userID' : vm.userId,
-                    'order' : vm.orderObject
-                };
-            for(let i = 0; i < vm.pois.length; i++){
-                vm.orderObject[i] =
+                    vm.isValid = false;
+                    break;
+                }
+                vm.validation.push(vm.order[i]);
+
+            }
+            vm.validation = [];
+            if(!vm.isValid)
+            {
+                toastr.error('The format was written wrong, please try again');
+            }
+            else
+            {
+                vm.orderObject = [];
+                vm.newOrderData =
                     {
-                        'poiID' : vm.pois[i].poiId,
-                        'order' : parseInt(vm.order[i])
-                    }
+                        'userID' : vm.userId,
+                        'order' : vm.orderObject
+                    };
+                for(let i = 0; i < vm.pois.length; i++){
+                    vm.orderObject[i] =
+                        {
+                            'poiID' : vm.pois[i].poiId,
+                            'order' : parseInt(vm.order[i])
+                        }
+                }
+
+                favoritesPOIService.saveNewOrder(vm.newOrderData).then(function (response)
+                {
+                    toastr.success('New Order is Saved');
+                    loadUserPois();
+                });
             }
 
-            favoritesPOIService.saveNewOrder(vm.newOrderData).then(function (response)
-            {
-                toastr.success('New Order is Saved');
-                loadUserPois();
-            }, function (response) {
-                toastr.error('Failed');
-            });
         }
 
         function ChangeUserOrder()
         {
+            vm.disableSaveButton = false;
             vm.changeOrder = true;
             vm.saveOrder = false;
             vm.filteredCategory = false;
