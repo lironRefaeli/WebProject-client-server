@@ -31,8 +31,8 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
         poiService.getPOIinfo(vm.poiId).then(function (response) {
             vm.poiInfo = response.data;
             vm.percentageRank = parseInt(vm.poiInfo[0][0]['rank'])/5 * 100;
-          //  vm.criticDate[0] = vm.poiInfo[1][0]['criticDate'].substring(0, 10);
-          //  vm.criticDate[1] = vm.poiInfo[1][1]['criticDate'].substring(0, 10);
+            vm.criticDate[0] = vm.poiInfo[1][0]['criticDate'].substring(0, 10);
+            vm.criticDate[1] = vm.poiInfo[1][1]['criticDate'].substring(0, 10);
 
         })
     }
