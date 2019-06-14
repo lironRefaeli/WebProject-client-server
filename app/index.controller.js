@@ -6,8 +6,8 @@ angular.module('appModule').controller('IndexController', ['localStorageModel', 
     vm.userConnected = false;
     vm.savedPOIs = [];
 
-    vm.addToFavorites = addToFavorites;
-    vm.removeFromFavorites = removeFromFavorites;
+    vm.parentAddToFavorites = parentAddToFavorites;
+    vm.parentRemoveFromFavorites = parentRemoveFromFavorites;
     vm.existsInFavorites = existsInFavorites;
     vm.logout = logout;
 
@@ -25,7 +25,7 @@ angular.module('appModule').controller('IndexController', ['localStorageModel', 
 
     }
 
-    function addToFavorites(poiID){
+    function parentAddToFavorites(poiID){
         if(!existsInFavorites(poiID))
             vm.savedPOIs.push(poiID);
         if(!localStorageModel.get('favoritePOIs'))
@@ -36,7 +36,7 @@ angular.module('appModule').controller('IndexController', ['localStorageModel', 
             localStorageModel.update('favoritePOIs',vm.savedPOIs);
     }
 
-    function removeFromFavorites(poiID){
+    function parentRemoveFromFavorites(poiID){
         if(existsInFavorites(poiID))
         {
             let index = vm.savedPOIs.indexOf(poiID);

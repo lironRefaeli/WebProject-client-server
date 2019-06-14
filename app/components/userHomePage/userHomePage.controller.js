@@ -51,7 +51,7 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
             userHomeService.addToFavor(vm.dataToAddPOI).then(function () {
                 toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
                 loadSavedPOIs();
-                $scope.$parent.vm.addToFavorites(poiId);
+                $scope.$parent.vm.parentAddToFavorites(poiId);
             });
 
         }
@@ -65,7 +65,7 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
 
             userHomeService.removeFromFavor(vm.dataToRemovePOI).then(function () {
                 loadSavedPOIs();
-                $scope.$parent.vm.removeFromFavorites(poiId);
+                $scope.$parent.vm.parentRemoveFromFavorites(poiId);
             });
         }
 
@@ -103,10 +103,10 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         }
 
         function checkLocalStorage(){
-            let token = localStorageModel.get('token');
-            if (token){
+            vm.token = localStorageModel.get('token');
+            if (vm.token){
+                setTokenService.set(vm.token);
                 importSavedPOIs();
-                setTokenService.set(token);
                 $scope.$parent.vm.username = localStorageModel.get('username');
                 $scope.$parent.vm.userConnected = true;
             }
@@ -117,11 +117,9 @@ angular.module('appModule').service('userHomeService', ['$http', function($http)
         function importSavedPOIs(){
             userHomeService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
                 vm.userFavoritePOIs = response.data;
-
                 for(let i = 0; i < vm.userFavoritePOIs.length; i++){
-                    $scope.$parent.vm.addToFavorites(vm.userFavoritePOIs[i].poiId);
+                    $scope.$parent.vm.parentAddToFavorites(vm.userFavoritePOIs[i].poiId);
                 }
-                $location.path('/userHomePage');
             });
         }
 

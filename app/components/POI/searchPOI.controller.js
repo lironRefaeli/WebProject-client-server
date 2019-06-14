@@ -13,6 +13,9 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     this.removeFromFavor = function (data) {
         return $http.post(serverUrl + 'loggedIn/user/DeleteSavedPOI', data);
     };
+    this.getSavedPOI = function (data) {
+        return $http.get(serverUrl + 'loggedIn/user/getUserSavedPOIs/' + data)
+    };
 
 
 }]).controller('searchPOIController', ['searchPoiService', '$location', 'toastr', 'localStorageModel','setTokenService', '$scope',
@@ -31,7 +34,6 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filteredName = false;
     vm.tempArray = [];
     vm.userId = localStorageModel.get('userId');
-    vm.isUserConnected = $scope.$parent.vm.userConnected;
     vm.isSaved = isSaved;
     vm.addToFavorites = addToFavorites;
     vm.removeFromFavorites = removeFromFavorites;
@@ -39,28 +41,38 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filterByCategory = filterByCategory;
     vm.filterByRank = filterByRank;
     vm.filterByName = filterByName;
-    checkLocalStorage()
+    checkLocalStorage();
     loadPois();
     loadCategories();
 
 
-        function checkLocalStorage(){
-            let token = localStorageModel.get('token');
-            if (token){
-                setTokenService.set(token);
-                $scope.$parent.vm.username = localStorageModel.get('username');
-                $scope.$parent.vm.userConnected = true;
-                $location.path('/points_of_interests');
-            }
+    function checkLocalStorage(){
+        vm.token = localStorageModel.get('token');
+        if (vm.token){
+            setTokenService.set(vm.token);
+            importSavedPOIs();
+            $scope.$parent.vm.username = localStorageModel.get('username');
+            $scope.$parent.vm.userConnected = true;
         }
+    }
 
 
-        function isSaved(poi){
-        return $scope.$parent.vm.existsInFavorites(poi.poiId);
+    function importSavedPOIs(){
+        searchPoiService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
+            vm.userFavoritePOIs = response.data;
+            for(let i = 0; i < vm.userFavoritePOIs.length; i++){
+                $scope.$parent.vm.parentAddToFavorites(vm.userFavoritePOIs[i].poiId);
+            }
+        });
+    }
+
+
+    function isSaved(poi){
+    return $scope.$parent.vm.existsInFavorites(poi.poiId);
     }
 
     function addToFavorites(poiId){
-        if(vm.isUserConnected)
+        if($scope.$parent.vm.userConnected)
         {
             vm.dataToAddPOI =
                 {
@@ -69,7 +81,7 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
                 };
             searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
                 toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
-                $scope.$parent.vm.addToFavorites(poiId);
+                $scope.$parent.vm.parentAddToFavorites(poiId);
             });
         }
     }
@@ -82,8 +94,7 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
             };
 
         searchPoiService.removeFromFavor(vm.dataToRemovePOI).then(function () {
-            $scope.$parent.vm.removeFromFavorites(poiId);
-            //isSaved(poi);
+            $scope.$parent.vm.parentRemoveFromFavorites(poiId);
         });
     }
 

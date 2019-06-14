@@ -16,6 +16,9 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
     this.removeFromFavor = function (data) {
         return $http.post(serverUrl + 'loggedIn/user/DeleteSavedPOI', data);
     };
+    this.getSavedPOI = function (data) {
+        return $http.get(serverUrl + 'loggedIn/user/getUserSavedPOIs/' + data)
+    };
 
 
 }]).controller('favoritesPOIController', ['$scope','favoritesPOIService', '$location', 'toastr', 'localStorageModel','setTokenService',
@@ -50,6 +53,27 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
         loadUserPois();
         loadCategories();
 
+
+        function checkLocalStorage(){
+            vm.token = localStorageModel.get('token');
+            if (vm.token){
+                setTokenService.set(vm.token);
+                importSavedPOIs();
+                $scope.$parent.vm.username = localStorageModel.get('username');
+                $scope.$parent.vm.userConnected = true;
+            }
+        }
+
+        function importSavedPOIs(){
+            favoritesPOIService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
+                vm.userFavoritePOIs = response.data;
+                for(let i = 0; i < vm.userFavoritePOIs.length; i++){
+                    $scope.$parent.vm.parentAddToFavorites(vm.userFavoritePOIs[i].poiId);
+                }
+            });
+        }
+
+
         function isSaved(poi){
             return $scope.$parent.vm.existsInFavorites(poi.poiId);
         }
@@ -63,7 +87,7 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
             favoritesPOIService.addToFavor(vm.dataToAddPOI).then(function () {
                 toastr.success("Added new POI to your favorites!");
                 loadUserPois();
-                $scope.$parent.vm.addToFavorites(poiId);
+                $scope.$parent.vm.parentAddToFavorites(poiId);
                 //(poi);
             },function () {
                 toastr.error("Adding new favorite POI failed");
@@ -80,21 +104,9 @@ angular.module('appModule').service('favoritesPOIService', ['$http', function ($
 
             favoritesPOIService.removeFromFavor(vm.dataToRemovePOI).then(function () {
                 loadUserPois();
-                $scope.$parent.vm.removeFromFavorites(poiId);
+                $scope.$parent.vm.parentRemoveFromFavorites(poiId);
                 //isSaved(poi);
             });
-        }
-
-
-        function checkLocalStorage(){
-            let token = localStorageModel.get('token');
-            if (token){
-                setTokenService.set(token);
-                $scope.$parent.vm.username = localStorageModel.get('username');
-                $scope.$parent.vm.userConnected = true;
-            }
-            else
-                $location.path('/');
         }
 
 

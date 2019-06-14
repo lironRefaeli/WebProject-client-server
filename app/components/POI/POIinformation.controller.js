@@ -13,6 +13,9 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
     this.saveCritic = function (data) {
         return $http.post(serverUrl + 'loggedIn/user/saveCritic', data);
     };
+    this.getSavedPOI = function (data) {
+        return $http.get(serverUrl + 'loggedIn/user/getUserSavedPOIs/' + data)
+    };
 
 }]).controller('POIinformationController', ['poiService', '$location', '$routeParams', 'toastr', '$scope', 'localStorageModel',  'setTokenService',
     function (poiService, $location, $routeParams, toastr, $scope, localStorageModel,setTokenService) {
@@ -23,6 +26,7 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
         vm.criticDate = [];
         vm.poiId = parseInt($routeParams.id);
         vm.userId = localStorageModel.get('userId');
+        vm.isUserConnected = $scope.$parent.vm.userConnected;
         vm.dataCritic = undefined;
         vm.loadFirstCritic = false;
         vm.loadSecondCritic = false;
@@ -38,28 +42,44 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
 
 
         function checkLocalStorage(){
-            let token = localStorageModel.get('token');
-            if (token){
-                setTokenService.set(token);
+            vm.token = localStorageModel.get('token');
+            if (vm.token){
+                setTokenService.set(vm.token);
+                importSavedPOIs();
                 $scope.$parent.vm.username = localStorageModel.get('username');
                 $scope.$parent.vm.userConnected = true;
             }
         }
 
-        function saveCritic() {
-            vm.dataCritic =
-                {
-                    'userID': vm.userId,
-                    'poiID': vm.poiId,
-                    'critic_text': vm.criticText.toString(),
-                    'rank': parseInt(vm.rank.toString())
-                };
 
-            poiService.saveCritic(vm.dataCritic).then(function (response) {
-                toastr.success("Your critic was saved");
-            }, function () {
-                toastr.error("Adding new critic was failed");
-            })
+        function importSavedPOIs(){
+            poiService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
+                vm.userFavoritePOIs = response.data;
+                for(let i = 0; i < vm.userFavoritePOIs.length; i++){
+                    $scope.$parent.vm.parentAddToFavorites(vm.userFavoritePOIs[i].poiId);
+                }
+            });
+        }
+
+        function saveCritic() {
+            if(vm.rank >= 1 && vm.rank <= 5)
+            {
+                vm.dataCritic =
+                    {
+                        'userID': vm.userId,
+                        'poiID': vm.poiId,
+                        'critic_text': vm.criticText.toString(),
+                        'rank': parseInt(vm.rank.toString())
+                    };
+
+                poiService.saveCritic(vm.dataCritic).then(function (response) {
+                    toastr.success("Your critic was saved");
+                }, function () {
+
+                })
+            }
+            else
+                toastr.error("One opf your inputs is wrong");
         }
 
 
@@ -85,18 +105,20 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
         }
 
         function addToFavorites(poiId) {
-            vm.dataToAddPOI =
-                {
-                    'userId': vm.userId,
-                    'poiId': poiId
-                };
-            poiService.addToFavor(vm.dataToAddPOI).then(function () {
-                toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
-                $scope.$parent.vm.addToFavorites(poiId);
-            }, function () {
-                toastr.error("Adding new favorite POI failed");
-            });
-
+            if($scope.$parent.vm.userConnected)
+            {
+                vm.dataToAddPOI =
+                    {
+                        'userId': vm.userId,
+                        'poiId': poiId
+                    };
+                poiService.addToFavor(vm.dataToAddPOI).then(function () {
+                    toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
+                    $scope.$parent.vm.parentAddToFavorites(poiId);
+                }, function () {
+                    toastr.error("Adding new favorite POI failed");
+                });
+            }
         }
 
         function removeFromFavorites(poiId) {
@@ -107,7 +129,7 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
                 };
 
             poiService.removeFromFavor(vm.dataToRemovePOI).then(function () {
-                $scope.$parent.vm.removeFromFavorites(poiId);
+                $scope.$parent.vm.parentRemoveFromFavorites(poiId);
             });
         }
     }

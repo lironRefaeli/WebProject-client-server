@@ -77,7 +77,7 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
             usersService.getSavedPOI(localStorageModel.get('userId')).then(function (response) {
                 vm.userFavoritePOIs = response.data;
                 for(let i = 0; i < vm.userFavoritePOIs.length; i++){
-                    $scope.$parent.vm.addToFavorites(vm.userFavoritePOIs[i].poiId);
+                    $scope.$parent.vm.parentAddToFavorites(vm.userFavoritePOIs[i].poiId);
                 }
                 $location.path('/userHomePage');
             });
