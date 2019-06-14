@@ -31,6 +31,7 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filteredName = false;
     vm.tempArray = [];
     vm.userId = localStorageModel.get('userId');
+    vm.isUserConnected = $scope.$parent.vm.userConnected;
     vm.isSaved = isSaved;
     vm.addToFavorites = addToFavorites;
     vm.removeFromFavorites = removeFromFavorites;
@@ -46,17 +47,18 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     }
 
     function addToFavorites(poiId){
-        vm.dataToAddPOI =
-            {
-                'userId' : vm.userId,
-                'poiId' : poiId
-            };
-        searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
-            toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
-            $scope.$parent.vm.addToFavorites(poiId);
-            //isSaved(poi);
-        });
-
+        if(vm.isUserConnected)
+        {
+            vm.dataToAddPOI =
+                {
+                    'userId' : vm.userId,
+                    'poiId' : poiId
+                };
+            searchPoiService.addToFavor(vm.dataToAddPOI).then(function () {
+                toastr.success("You got " + ($scope.$parent.vm.savedPOIs.length + 1) + " favorite Points of Interest now!");
+                $scope.$parent.vm.addToFavorites(poiId);
+            });
+        }
     }
 
     function removeFromFavorites(poiId){
