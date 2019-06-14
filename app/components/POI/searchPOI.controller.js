@@ -39,10 +39,23 @@ angular.module('appModule').service('searchPoiService', ['$http', function ($htt
     vm.filterByCategory = filterByCategory;
     vm.filterByRank = filterByRank;
     vm.filterByName = filterByName;
+    checkLocalStorage()
     loadPois();
     loadCategories();
 
-    function isSaved(poi){
+
+        function checkLocalStorage(){
+            let token = localStorageModel.get('token');
+            if (token){
+                setTokenService.set(token);
+                $scope.$parent.vm.username = localStorageModel.get('username');
+                $scope.$parent.vm.userConnected = true;
+                $location.path('/points_of_interests');
+            }
+        }
+
+
+        function isSaved(poi){
         return $scope.$parent.vm.existsInFavorites(poi.poiId);
     }
 

@@ -175,8 +175,8 @@ router.post('/saveCritic', async function saveCritic(req,res){
         else
             currID = maxID[0][''] + 1;
 
-        await DButilsAzure.execQuery('INSERT INTO Critics (criticId, userId, poiId, criticText, rank) VALUES (' + currID.toString() + ', \'' + req.body.userID + '\', \'' +
-            req.body.poiID + '\', \'' + req.body.critic_text + '\', \'' + req.body.rank + '\')');
+        await DButilsAzure.execQuery('INSERT INTO Critics VALUES (' + currID.toString() + ', \'' + req.body.userID + '\', \'' +
+            req.body.poiID + '\', \'' + req.body.critic_text + '\', \'' + req.body.rank + '\', CURRENT_TIMESTAMP)');
 
         //updating the POI rank
         await DButilsAzure.execQuery('UPDATE PointsOfInterests SET rank = ' +
