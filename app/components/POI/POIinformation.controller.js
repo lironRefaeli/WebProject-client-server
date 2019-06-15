@@ -48,6 +48,7 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
                 importSavedPOIs();
                 $scope.$parent.vm.username = localStorageModel.get('username');
                 $scope.$parent.vm.userConnected = true;
+                vm.isUserConnected = $scope.$parent.vm.userConnected;
             }
         }
 
@@ -72,10 +73,9 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
                         'rank': parseInt(vm.rank.toString())
                     };
 
-                poiService.saveCritic(vm.dataCritic).then(function (response) {
+                poiService.saveCritic(vm.dataCritic).then(function() {
                     toastr.success("Your critic was saved");
-                }, function () {
-
+                    getPOIinformation();
                 })
             }
             else
@@ -86,7 +86,7 @@ angular.module('appModule').service('poiService', ['$http', function ($http) {
         function getPOIinformation() {
             poiService.getPOIinfo(vm.poiId).then(function (response) {
                 vm.poiInfo = response.data;
-                vm.percentageRank = parseInt(vm.poiInfo[0][0]['rank']) / 5 * 100;
+                vm.percentageRank = parseFloat(vm.poiInfo[0][0]['rank']) / 5 * 100;
                 if (vm.poiInfo[1][0] !== undefined) {
                     vm.loadFirstCritic = true;
                     vm.criticDate[0] = vm.poiInfo[1][0]['criticDate'].substring(0, 10);

@@ -66,6 +66,7 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
                 importSavedPOIs();
                 $scope.$parent.vm.userConnected = true;
                 $scope.$parent.vm.username = localStorageModel.get('username');
+                $location.path('/userHomePage');
             }, function (response) {
                 toastr.error('Failed to login. Username or Password are incorrect');
                 console.log(response);
@@ -79,7 +80,6 @@ angular.module('appModule').service('usersService', ['$http', function ($http) {
                 for(let i = 0; i < vm.userFavoritePOIs.length; i++){
                     $scope.$parent.vm.parentAddToFavorites(vm.userFavoritePOIs[i].poiId);
                 }
-                $location.path('/userHomePage');
             });
         }
 
